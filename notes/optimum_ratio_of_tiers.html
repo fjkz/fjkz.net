@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Kazuho Fujii">
+    <link rel="shortcut icon" href="favicon.ico">
+
+    <title>The optimum ratio of devices in tiered storage</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="../lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap theme -->
+    <link href="../lib/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="my-template.css" rel="stylesheet">
+
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({ 
+        tex2jax: {
+          inlineMath: [['$','$'], ['\\(','\\)']], 
+          displayMath: [['$$','$$'], ['\\[','\\]']], 
+          processEscapes: true 
+        },
+        TeX: {
+          Macros: {
+            bm: ["{\\boldsymbol #1}", 1],
+          },
+          equationNumbers: {autoNumber: "AMS"}
+        }
+      }); 
+    </script>
+    <script type="text/javascript" src="../lib/MathJax/MathJax.js?config=TeX-AMS_HTML"></script>
+  </head>
+
+  <body>
+
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="../index.html">K.Fujii</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="../profile.html">PROFILE</a></li>
+            <li><a href="../notes.html">NOTES</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+
+    <div class="container my-template">
+      <div class="page-header">
+        <h1>
+          The optimum ratio of devices in tiered storage
+        </h1>
+      </div>
+      <div class="signiture">
+        <p>
+          Kazuho Fujii
+        </p>
+        <p>
+          Mar. 9, 2014
+        </p>
+      </div>
+
+      <div class="page-header">
+        <h2 id="background">
+          Background
+        </h2>
+      </div>
+
+      <p>
+      Storage tiering is a technique to create a high performance and cheap storage by combining several kinds of storage devices,
+      in which the more accessed data is allocated to the higher performance device and the fewer accessed data is allocated to the cheaper device.
+      For example, SSD, SAS HDD and SATA HDD are usually used for each tiers.
+      </p>
+      <p>
+      However, it is unclear how we should decide the ratio of devices or what kinds of devices should be combined for efficiency.
+      If we can calculate the optimum ratio of devices by the access pattern, we can effectively allocate devices from storage pools.
+      In this report, I derive the optimum ratio of devices that maximizes the performance under some assumptions:
+      we can decide uniquely storage device performance and cost per a unit capacity;
+      and the access pattern obeys the Pareto distribution. Additionally I discuss about the condition of devices for effective tiering.
+      </p>
+
+      <div class="page-header">
+        <h2 id="derivation-of-the-optimum-ratio-of-devices">
+          Derivation of the optimum ratio of devices 
+        </h2>
+      </div>
+      <p>
+      I think about creating tiered storage with $N$ kinds of recording devices: Device-$1$, Device-$2$, $\cdots$, Device-$N$.
+      I express the performance value of Device-$i$ as $q_i$ and express the cost per a unit capacity as $c_i$, where  $q_1 &lt; q_2 &lt; \cdots &lt; q_N$, $c_1 &lt; c_2 &lt; \cdots &lt; c_N$.
+      I express the ratio of Device-$i$ capacity to the total capacity of a volume as $r_i$, where
+ 
+      $$\begin{align}
+        \sum_{i=1}^N r_i &= 1 \label{sum_ratio}\\
+        r_i & &gt; 0
+      \end{align}$$
+
+      . The mean cost per a unit capacity $\bar{c}$ is
+
+      $$\begin{align}
+        \bar{c}=\sum_{i=1}^N r_i c_i \label{mean_cost}
+      \end{align}$$
+      .
+      </p>
+      <p>
+      I think about the case where the mean cost $\bar{c}\ (c_1 \leq \bar{c} \leq c_N)$ is provided as a budget.
+      Now I want to derive the ratio of each drives $r_1, r_2, \cdots, r_N$ which maximizes the mean performance value $\bar{q}$ under the constraints \eqref{sum_ratio}\eqref{mean_cost}.
+      I can use the method of Lagrange multiplier for this problem.
+      With multiplier $\mu$ and $\lambda$, I define a function $g$ as
+
+      $$\begin{align}
+        g := \bar{q} - \lambda \left( \bar{c} - \sum_{i=1}^{N} r_i c_i \right) 
+        -\mu \left( 1- \sum_{i=1}^N r_i \right)
+      \end{align}$$
+
+      .
+      I can obtain $r_1, r_2, \cdots ,r_N$ where $\bar{q}$ get an extreme value by solving the simultaneous equations of \eqref{sum_ratio}\eqref{mean_cost} and $N$ equations below:
+
+      $$\begin{align}
+        \frac{\partial g}{\partial r_i} = 0
+          ,\ (i = 1, 2, \cdots , N)
+          \label{lagrange_theory}
+      \end{align}$$
+      .
+      </p>
+      <p>
+      However, $\bar{q}$ is unknown. In order to solve the equations, I have to express $\bar{q}$ with an equation including $r_i$.
+      Here I assume that the distribution of access to storage sectors or blocks (written just with sectors below) obeys the Pareto distribution, sometimes called the law of 80:20.
+      That is we can express the probability $F$, where the number of access to a sector is not more than $x$, with the equation below:
+
+      $$\begin{align}
+        F=1-\left(\frac{x_0}{x}\right)^a,\ (a &gt; 1,\ x_0 &gt; 0)
+      \end{align}$$
+      .
+      </p>
+      <p>
+      $a$ and $x_0$ are parameters of the probability distribution.
+      $a$ means bias of access, so called Pareto coefficient.
+      As $a \approx 1$ access is concentrated to a sector;
+      as $a \to \infty$ access is uniformly distributed, that is the number of access at each sector is $x_0$. The probability density function $f$ is
+
+      $$\begin{align}
+      f &:= \frac{\partial F}{\partial x}\nonumber\\
+        & = \frac{a x_0^a}{x^{a+1}}
+      \end{align}$$
+      </p>
+      <p>
+      I assume that the tiering is perfect; the higher accessed sector is allocated to the higher performance device for each sector.
+      I allocate sectors where access count $x$ is $x_{i-1} \leq x &lt; x_i$ to Device-$i$; where $x_N = \infty$.
+      The relationship between $r_i$ and $x_i$ is
+
+      $$\begin{align}
+        r_1+r_2+\cdots+r_i=1-\left(\frac{x_0}{x_i}\right)^a \\
+        x_i=x_0\left(1-r_1-r_2-\cdots-r_i\right)^{-\frac{1}{a}}
+      \end{align}$$
+
+      . The probability of access to a sector on Device-$i$ $p_i$ is
+      $$\begin{align}
+        p_i &= \frac{\displaystyle{\int_{x_{i-1}}^{x_i} x f dx}}{\displaystyle{\int_{x_0}^{\infty} x f dx}} \nonumber\\
+            &= \left(1-r_1-\cdots-r_{i-1}\right)^\frac{a-1}{a}
+              -\left(1-r_1-\cdots-r_i\right)^\frac{a-1}{a} 
+      \end{align}$$
+      .
+      The mean performance $\bar{q}$ is
+
+      $$\begin{align}
+        \bar{q}&=\sum_{i=1}^N p_i q_i \nonumber\\
+               &=\sum_{i=1}^N \left\{ \left(1-r_1-\cdots-r_{i-1}\right)^\frac{a-1}{a}
+                              -\left(1-r_1-\cdots-r_i    \right)^\frac{a-1}{a}
+        \right\} q_i \label{mean_quality}
+      \end{align}$$
+      .
+      </p>
+      <p>
+      By solving the simultaneous equations \eqref{sum_ratio}\eqref{mean_cost}\eqref{lagrange_theory}\eqref{mean_quality},
+      I can get the optimum ratio of each drive $r_1,r_2,\cdots,r_N$ where the mean performance $\bar{q}$ get the maximum value; that is
+      $$\begin{align}
+      r_1&=(\bar{c}-c_1)\left\{
+        \sum_{i=1}^{N-1}\Delta c_i \left(\frac{\Delta c_i}{\Delta q_i}
+        \right)^{-a}\right\}^{-1}
+        \left\{ 
+          -     \left(\frac{\Delta c_1}{\Delta q_1}
+                \right)^{-a}
+        \right\}+1 \label{r1_c}\\
+
+      r_i&=(\bar{c}-c_1)\left\{
+        \sum_{i=1}^{N-1}\Delta c_i \left(\frac{\Delta c_i}{\Delta q_i}
+        \right)^{-a}\right\}^{-1}
+        \left\{ 
+                \left(\frac{\Delta c_{i-1}}{\Delta q_{i-1}}
+                \right)^{-a}
+          -     \left(\frac{\Delta c_i}{\Delta q_i}
+                \right)^{-a}
+        \right\}, (i = 2, 3, \cdots, N-1)\label{ri_c}\\
+
+      r_N&=(\bar{c}-c_1)\left\{
+        \sum_{i=1}^{N-1}\Delta c_i \left(\frac{\Delta c_i}{\Delta q_i}
+        \right)^{-a}\right\}^{-1}
+        \left\{ 
+          \left(\frac{\Delta c_{N-1}}{\Delta q_{N-1}}
+          \right)^{-a}
+        \right\} \label{rN_c}
+      \end{align}$$
+
+      $$\begin{align}
+        \Delta c_i &:= c_{i+1} - c_i \\
+        \Delta q_i &:= q_{i+1} - q_i
+      \end{align}$$
+      . In this case, $\bar{q}$ is
+      $$\begin{align}
+      \bar{q} = q_1 + \left(\bar{c}-c_1\right)^\frac{a-1}{a}
+      \left\{\sum_{i=1}^{N-1} \Delta c_i
+       \left(\frac{\Delta c_i}{\Delta q_i}\right)^{-a}
+       \right\}^{-\frac{a-1}{a}} 
+       \left\{\sum_{j=1}^{N-1}
+        \Delta q_j  \left(\frac{\Delta c_j}{\Delta q_j}\right)^{-a+1}
+      \right\}
+      \end{align}$$
+      .
+      </p>
+
+      <div class="page-header">
+        <h2 id="discussion">
+          Discussion
+        </h2>
+      </div>
+
+      <p>
+      In the parameters of the assumed probability distribution, $x_0$ doesn't appear but just the Pareto coefficient $a$ appears.
+      Therefore, for getting the optimum ratio we have to assume only $a$, which differs in situations where storage used. We can get the Pareto coefficient statistically.
+      </p>
+      <p>
+      The condition where the optimum ratio of Device-$i$ $r_i &gt; 0\ (i = 2, 3, \cdots, N-1)$  is
+
+      $$\begin{align}
+        \frac{\Delta c_{i-1}}{\Delta q_{i-1}} &lt; \frac{\Delta c_i}{\Delta q_i}
+        \label{satuation}
+      \end{align}$$
+
+      . This means points $(c_i, q_i)$ are on a convex curve in a graph where $x$ and $y$ axes are respectively cost and performance.
+      We can not enhance mean performance or reduce mean cost if we combine drives that do not meet this condition.
+      The combination of SSD, SAS HDD and SATA HDD could not meet this condition bacause SSD became cheaper.
+      </p>
+      <p>
+      The condition where the ratio of Device-$1$ $r_1 &gt; 0$ is
+
+      $$\begin{align}
+        \bar{c} &lt; c_1 + \left(\frac{\Delta c_1}{\Delta q_1}\right)^a \sum_{i=1}^{N-1}\Delta c_i
+         \left(\frac{\Delta c_i}{\Delta q_i}\right)^{-a} \label{over_budget}
+      \end{align}$$
+
+      .This means that the lowest performance device has no effect when having enough budget.
+      In this case we should apply \eqref{r1_c}\eqref{ri_c}\eqref{rN_c} with removing the lowest performance device.
+      </p>
+
+      <div class="page-header">
+        <h2 id="conclusion">
+           Conclusion
+        </h2>
+      </div>
+      
+      <p>
+      In this report the optimum ratio of devices are derived that maximize a tiered storage performance.
+      It can be applied to designing tiered storage or developing a software that automatically adjusts tiering system configurations.
+      It is under consideration for storage tiering, but it could be also applied to caching.
+      </p>
+      <p>
+      Additionally the fact is cleared that kinds of devices in tiers require some conditions for effective performance.
+      Some tiered storage systems might take a penalty by unsatisfying the conditions.
+      </p>
+
+      <div class="page-header">
+        <h2 id="appendix">
+          Appendix 
+        </h2>
+      </div>
+
+      <p>
+      As appendicies I considered about
+      <ul>
+        <li>the case provided a performance requirement</li>
+        <li>the case considering tiering efficiency</li>
+      </ul>
+      .
+      They are in <a href="optimum_ratio_of_tiers.pdf">PDF version</a>.
+
+      </p>
+
+    </div><!-- /.container -->
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="../lib/jquery.min.js"></script>
+    <script src="../lib/bootstrap/js/bootstrap.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="../lib/ie10-viewport-bug-workaround.js"></script>
+  </body>
+</html>

@@ -1,0 +1,298 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage{latexsym}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{bm}
+\usepackage{color}
+
+\setlength{\textheight}{40\baselineskip}
+\setlength{\topmargin}{35mm}
+\addtolength{\topmargin}{-1.5in}    
+
+\setlength{\textwidth}{150mm}
+\setlength{\oddsidemargin}{30mm}
+\addtolength{\oddsidemargin}{-1in}  
+\setlength{\evensidemargin}{30mm}
+\addtolength{\evensidemargin}{-1in} 
+
+\setlength{\footskip}{30mm}
+
+\pagestyle{plain}
+
+\renewcommand{\figurename}{Fig.}
+\renewcommand{\tablename}{Table}
+
+\title{The optimum ratio of devices in tiered storage}
+\author{Kazuho Fujii}
+\date{Mar. 9, 2015}
+
+\begin{document}
+\maketitle
+
+\section{Background}
+Storage tiering is a technique to create a high performance and cheap storage by combining several kinds of storage devices,
+in which the more accessed data is allocated to the higher performance device and the fewer accessed data is allocated to the cheaper device.
+For example, SSD, SAS HDD and SATA HDD are usually used for each tiers.
+
+However, it is unclear how we should decide the ratio of devices or what kinds of devices should be combined for efficiency.
+If we can calculate the optimum ratio of devices by the access pattern, we can effectively allocate devices from storage pools.
+In this report, I derive the optimum ratio of devices that maximizes the performance under some assumptions:
+we can decide uniquely storage device performance and cost per a unit capacity;
+and the access pattern obeys the Pareto distribution. Additionally I discuss about the condition of devices for effective tiering.
+
+\section{Derivation of the optimum ratio of devices}
+
+I think about creating tiered storage with $N$ kinds of recording devices: Device-1, Device-2, $\cdots$, Device-$N$.
+I express the performance value of Device-$i$ as $q_i$ and express the cost per a unit capacity as $c_i$, where  $q_1<q_2<\cdots<q_N$, $c_1<c_2<\cdots<c_N$.
+I express the ratio of Device-$i$ capacity to the total capacity of a volume as $r_i$, where
+\begin{eqnarray}
+\sum_{i=1}^N r_i = 1 \label{sum_ratio}\\
+r_i > 0
+\end{eqnarray}
+. The mean cost per a unit capacity $\bar{c}$ is
+\begin{eqnarray}
+\bar{c}&=&\sum_{i=1}^N r_i c_i \label{mean_cost}
+\end{eqnarray}
+.
+
+I think about the case where the mean cost $\bar{c}\ (c_1 \leq \bar{c} \leq c_N)$ is provided as a budget.
+Now I want to derive the ratio of each drives $r_1, r_2, \cdots, r_N$ which maximizes the mean performance value $\bar{q}$ under the constraints \eqref{sum_ratio}\eqref{mean_cost}.
+I can use the method of Lagrange multiplier for this problem.
+With multiplier $\mu$ and $\lambda$, I define a function $g$ as
+\begin{eqnarray}
+g&:=&\bar{q} - \lambda \left( \bar{c} - \sum_{i=1}^{N} r_i c_i \right) 
+-\mu \left( 1- \sum_{i=1}^N r_i \right)
+\end{eqnarray}
+.
+I can obtain $r_1, r_2, \cdots ,r_N$ where $\bar{q}$ get an extreme value by solving the simultaneous equations of \eqref{sum_ratio}\eqref{mean_cost} and $N$ equations below:
+\begin{eqnarray}
+\frac{\partial g}{\partial r_i} &=& 0
+  ,\ (i = 1, 2, \cdots , N)
+  \label{lagrange_theory}
+\end{eqnarray}
+.
+
+However, $\bar{q}$ is unknown. In order to solve the equations, I have to express $\bar{q}$ with an equation including $r_i$.
+Here I assume that the distribution of access to storage sectors or blocks (written just with sectors below) obeys the Pareto distribution, sometimes called the law of 80:20.
+That is we can express the probability $F$, where the number of access to a sector is not more than $x$, with the equation below: 
+\begin{eqnarray}
+F=1-\left(\frac{x_0}{x}\right)^a,\ (a > 1,\ x_0 > 0)
+\end{eqnarray}
+
+$a$ and $x_0$ are parameters of the probability distribution.
+$a$ means bias of access, so called Pareto coefficient.
+As $a \approx 1$ access is concentrated to a sector;
+as $a \to \infty$ access is uniformly distributed, that is the number of access at each sector is $x_0$. The probability density function $f$ is 
+\begin{eqnarray}
+f &:=& \frac{\partial F}{\partial x}\nonumber\\
+  &=& \frac{a x_0^a}{x^{a+1}}
+\end{eqnarray}
+.
+
+I assume that the tiering is perfect; the higher accessed sector is allocated to the higher performance device for each sector. 
+I allocate sectors where access count $x$ is $x_{i-1} \leq x < x_i$ to Device-$i$; where $x_N = \infty$.
+The relationship between $r_i$ and $x_i$ is
+\begin{eqnarray}
+r_1+r_2+\cdots+r_i=1-\left(\frac{x_0}{x_i}\right)^a \\
+x_i=x_0\left(1-r_1-r_2-\cdots-r_i\right)^{-\frac{1}{a}}
+\end{eqnarray}
+. The probability of access to a sector on Device-$i$ $p_i$ is
+\begin{eqnarray}
+p_i &=& \frac{\displaystyle{\int_{x_{i-1}}^{x_i} x f dx}}{\displaystyle{\int_{x_0}^{\infty} x f dx}} \nonumber\\
+&=& \left(1-r_1-\cdots-r_{i-1}\right)^\frac{a-1}{a}
+   -\left(1-r_1-\cdots-r_i\right)^\frac{a-1}{a} 
+\end{eqnarray}
+.
+The mean performance $\bar{q}$ is
+\begin{eqnarray}
+\bar{q}&=&\sum_{i=1}^N p_i q_i \nonumber\\
+&=&\sum_{i=1}^N \left\{ \left(1-r_1-\cdots-r_{i-1}\right)^\frac{a-1}{a}
+                 -\left(1-r_1-\cdots-r_i    \right)^\frac{a-1}{a}
+\right\} q_i \label{mean_quality}
+\end{eqnarray}
+.
+
+By solving the simultaneous equations \eqref{sum_ratio}\eqref{mean_cost}\eqref{lagrange_theory}\eqref{mean_quality},
+I can get the optimum ratio of each drive $r_1,r_2,\cdots,r_N$ where the mean performance $\bar{q}$ get the maximum value; that is 
+\begin{eqnarray}
+r_1&=&(\bar{c}-c_1)\left\{
+    \sum_{i=1}^{N-1}\Delta c_i \left(\frac{\Delta c_i}{\Delta q_i}
+    \right)^{-a}\right\}^{-1}
+\left\{ 
+-     \left(\frac{\Delta c_1}{\Delta q_1}
+    \right)^{-a}
+\right\}+1 \label{r1_c}\\
+r_i&=&(\bar{c}-c_1)\left\{
+    \sum_{i=1}^{N-1}\Delta c_i \left(\frac{\Delta c_i}{\Delta q_i}
+    \right)^{-a}\right\}^{-1}
+\left\{ 
+     \left(\frac{\Delta c_{i-1}}{\Delta q_{i-1}}
+    \right)^{-a}
+-     \left(\frac{\Delta c_i}{\Delta q_i}
+    \right)^{-a}
+\right\}, \nonumber \\
+&& (i = 2, 3, \cdots, N-1)\label{ri_c}\\
+r_N&=&(\bar{c}-c_1)\left\{
+    \sum_{i=1}^{N-1}\Delta c_i \left(\frac{\Delta c_i}{\Delta q_i}
+    \right)^{-a}\right\}^{-1}
+\left\{ 
+    \left(\frac{\Delta c_{N-1}}{\Delta q_{N-1}}
+    \right)^{-a}
+\right\} \label{rN_c}
+\end{eqnarray}
+\begin{eqnarray}
+\Delta c_i &:=& c_{i+1} - c_i \\
+\Delta q_i &:=& q_{i+1} - q_i
+\end{eqnarray}
+. In this case, $\bar{q}$ is
+\begin{eqnarray}
+\bar{q} = q_1 + \left(\bar{c}-c_1\right)^\frac{a-1}{a}
+\left\{\sum_{i=1}^{N-1} \Delta c_i
+ \left(\frac{\Delta c_i}{\Delta q_i}\right)^{-a}
+\right\}^{-\frac{a-1}{a}} 
+\left\{\sum_{j=1}^{N-1}
+ \Delta q_j  \left(\frac{\Delta c_j}{\Delta q_j}\right)^{-a+1}
+\right\}
+\end{eqnarray}
+.
+
+\section{Discussion}
+
+In the parameters of the assumed probability distribution, $x_0$ doesn't appear but just the Pareto coefficient $a$ appears.
+Therefore, for getting the optimum ratio we have to assume only $a$, which differs in situations where storage used. We can get the Pareto coefficient statistically.
+
+The condition where the optimum ratio of Device-$i$ $r_i > 0\ (i = 2, 3, \cdots, N-1)$  is
+\begin{eqnarray}
+\frac{\Delta c_{i-1}}{\Delta q_{i-1}} < \frac{\Delta c_i}{\Delta q_i}
+\label{satuation}
+\end{eqnarray}
+. This means points $(c_i, q_i)$ are on a convex curve in a graph where $x$ and $y$ axes are respectively cost and performance.
+We can not enhance mean performance or reduce mean cost if we combine drives that do not meet this condition. 
+The combination of SSD, SAS HDD and SATA HDD could not meet this condition bacause SSD became cheaper.
+
+The condition where the ratio of Device-1 $r_1 > 0$ is
+
+\begin{eqnarray}
+\bar{c} < c_1 + \left(\frac{\Delta c_1}{\Delta q_1}\right)^a \sum_{i=1}^{N-1}\Delta c_i
+ \left(\frac{\Delta c_i}{\Delta q_i}\right)^{-a} \label{over_budget}
+\end{eqnarray}
+.This means that the lowest performance device has no effect when having enough budget.
+In this case we should apply \eqref{r1_c}\eqref{ri_c}\eqref{rN_c} with removing the lowest performance device.
+
+\section{Conclusion}
+
+In this report the optimum ratio of devices are derived that maximize a tiered storage performance.
+It can be applied to designing tiered storage or developing a software that automatically adjusts tiering system configurations.
+It is under consideration for storage tiering, but it could be also applied to caching.
+
+Additionally the fact is cleared that kinds of devices in tiers require some conditions for effective performance.
+Some tiered storage systems might take a penalty by unsatisfying the conditions.
+
+\appendix
+
+\section{In the case provided a performance requirement}
+
+In the case where a required performance value $\bar{q}\ (q_1 \leq \bar{q} \leq q_N)$ is provided, I can get the optimum ratio with the same method.
+In this case I want the ratio $r_1,r_2,\cdots,r_N$ which minimize mean costs $\bar{c}$ under the constraints \eqref{sum_ratio}\eqref{mean_quality}.
+
+The result is below:
+\begin{eqnarray}
+r_1 &=& \left(\bar{q}-q_1\right)^\frac{a}{a-1}
+\left\{\sum_{i=1}^{N-1}\Delta q_i\left(\frac{\Delta c_i}{\Delta
+				q_i}\right)^{-a+1}\right\}^{-\frac{a}{a-1}}
+\left\{-\left(\frac{\Delta c_1}{\Delta q_1}\right)^{-a}\right\} +
+1 \label{r1_q} \\
+r_i &=& \left(\bar{q}-q_1\right)^\frac{a}{a-1}
+\left\{\sum_{i=1}^{N-1}\Delta q_i\left(\frac{\Delta c_i}{\Delta
+				q_i}\right)^{-a+1}\right\}^{-\frac{a}{a-1}}
+\left\{\left(\frac{\Delta c_{i-1}}{\Delta q_{i-1}}\right)^{-a}
+-\left(\frac{\Delta c_i}{\Delta q_i}\right)^{-a}\right\}
+, \nonumber \\
+&& (i = 2, 3, \cdots, N-1) \label{ri_q}\\
+r_N &=& \left(\bar{q}-q_1\right)^\frac{a}{a-1}
+\left\{\sum_{i=1}^{N-1}\Delta q_i\left(\frac{\Delta c_i}{\Delta
+				q_i}\right)^{-a+1}\right\}^{-\frac{a}{a-1}}
+\left\{\left(\frac{\Delta c_{N-1}}{\Delta
+	q_{N-1}}\right)^{-a}\right\}
+\label{rN_q}
+\end{eqnarray}
+. In this case,
+\begin{eqnarray}
+\bar{c} = c_1 + \left(\bar{q}-q_1\right)^\frac{a}{a-1}
+\left\{\sum_{i=1}^{N-1}\Delta q_i\left(\frac{\Delta c_i}{\Delta
+				q_i}\right)^{-a+1}\right\}^{-\frac{a}{a-1}}
+\left\{\sum_{j=1}^{N-1}\Delta c_j \left(\frac{\Delta c_{j}}{\Delta q_{j}}\right)^{-a}\right\}
+\end{eqnarray}
+.
+
+The required performance $\bar{q}$ needs the condition below:
+\begin{eqnarray}
+\bar{q} &<& q_1 + 
+\left(\frac{\Delta c_1}{\Delta q_1}\right)^{a-1}
+\sum_{i=1}^{N-1}\Delta q_i\left(\frac{\Delta c_i}{\Delta
+				q_i}\right)^{-a+1} 
+\end{eqnarray}
+. When the required performance is over this value, we can not include the lowest performance device into tiers.
+In this case, we should apply \eqref{r1_q}\eqref{ri_q}\eqref{rN_q} with removing the device.
+
+However, this result may not satisfy the required performance because assuming perfect tiering.
+
+\section{In the case considering tiering efficiency}
+
+I think about the case when tiering is not perfect.
+I express the probability with $s\ (0 < s\leq 1)$ where data exists at the best device. In this case, the probability of access to a sector on Device-$i$ $\tilde{p}_i$ is
+\begin{eqnarray}
+\tilde{p}_i = sp_i + (1-s)r_i
+\end{eqnarray}
+The mean performance $\tilde{q}$ is 
+\begin{eqnarray}
+\tilde{q} &=& \sum_{i=1}^N\tilde{p}_i q_i \nonumber\\
+&=& \sum_{i=1}^N \left[s \left\{
+ \left(1-r_1-\cdots-r_{i-1}\right)^\frac{a-1}{a}-\left(1-r_1-\cdots-r_i\right)^\frac{a-1}{a}
+\right\}
+ + (1-s) r_i\right] q_i
+\end{eqnarray}
+. However, I can not analytically get the ratio of devices $r_1,r_2,\cdots,r_N$ which maximizes $\tilde{q}$. Thus a numerical analysis technique is required.
+
+Now I need a complex number $\lambda$ that satisfies the equation below:
+\begin{eqnarray}
+h(\lambda) :=
+\bar{c}-c_1 - \left(\frac{s(a-1)}{a}\right)^{a}
+\sum_{i=1}^{N-1}\Delta c_i \left(
+\lambda\frac{\Delta c_i}{\Delta q_i} + 1-s
+\right)^{-a} =
+0 \label{h=0} 
+\end{eqnarray}
+I can solve it with the Newton method;
+$\lambda_n$ becomes $\lambda$ that meets \eqref{h=0} as repeating the operation below from a proper initial value $\lambda_0$:
+\begin{eqnarray}
+\lambda_{n+1} &=& \lambda_n - \frac{h(\lambda_n)}{h'(\lambda_n)}
+\end{eqnarray}
+If the initial value is not proper, $\lambda_n$ do not convergence.
+The solution of \eqref{h=0} is obvious when $s = 1$. 
+As closing $s$ to the wanted value, solving \eqref{h=0} for each $s$ with using previous $s$ as an initial value,
+I could conduct stable calculation.
+
+With the solution $\lambda$, the ratio of devices $r_1,r_2,\cdots,r_N$ which maximizes $\tilde{q}$ is
+\begin{eqnarray}
+r_1&=&\left(\frac{s(a-1)}{a}\right)^{a}
+\left\{ 
+     \left(\lambda\frac{\Delta c_1}{\Delta q_1}+1-s
+    \right)^{-a}
+\right\}+1 \label{r1_cs}\\
+r_i&=&\left(\frac{s(a-1)}{a}\right)^{a}
+\left\{ -
+     \left(\lambda\frac{\Delta c_{i-1}}{\Delta q_{i-1}}+1-s
+    \right)^{-a}
++     \left(\lambda\frac{\Delta c_i}{\Delta q_i}+1-s
+    \right)^{-a}
+\right\}, \nonumber \\
+&& (i = 2, 3, \cdots, N-1)\label{ri_cs}\\
+r_N&=&\left(\frac{s(a-1)}{a}\right)^{a}
+\left\{-
+    \left(\lambda\frac{\Delta c_{N-1}}{\Delta q_{N-1}}+1-s
+    \right)^{-a}
+\right\} \label{rN_cs}
+\end{eqnarray}
+
+\end{document}
