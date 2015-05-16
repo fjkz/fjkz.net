@@ -11,8 +11,8 @@
 #    	gnuplot home:     http://www.gnuplot.info
 #    	faq, bugs, etc:   type "help FAQ"
 #    	immediate help:   type "help"  (plot window: hit 'h')
-# set terminal wxt 0
-# set output
+set terminal postscript eps enhanced color
+set output "./N-S_P099.eps"
 unset clip points
 set clip one
 unset clip two
