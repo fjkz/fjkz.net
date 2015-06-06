@@ -23,7 +23,7 @@
 \renewcommand{\figurename}{Fig.}
 \renewcommand{\tablename}{Table}
 
-\title{How we should mix scale-up and scale-out strategies}
+\title{How should we mix scale-up and scale-out strategies}
 \author{Kazuho Fujii}
 \date{May. 16, 2015}
 
@@ -49,7 +49,7 @@ performance of parallel computing system can not exceed a value however large
 number of machine added.
 
 Therefore we should mix scale-up and scale-out strategy. The question here is
-how we should mix them? What size of machine we should buy? In this memo, I
+how should we mix them? What size of machine we should buy? In this memo, I
 think about it.
 
 \section{Scale-up strategy}
@@ -153,7 +153,7 @@ $$
 N_e = \frac{(1-a)P}{a(1-P)}
 $$
 . This is the most effective number of nodes. 
-It tell us how we should decide the size of machines for a cluster. 
+It tell us how should we decide the size of machines for a cluster. 
 
 In non-scalable architecture: $P=0$ or $C \to \infty$, the best number of nodes 
 $N_e \to 0$ as seen in Fig.\ref{C-Ne}. This means that only scale-up strategy has effect. We should use a higher performance machine in this case.
