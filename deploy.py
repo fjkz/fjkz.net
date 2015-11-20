@@ -17,6 +17,7 @@ for filename in sys.argv[1:]:
     if filename.endswith('setting.json') :
         continue
     print "PUT " + filename
-    ftp.storbinary('STOR ' + filename, open(filename, 'r'))
+    # 'www/' is the public directory.
+    ftp.storbinary('STOR www/' + filename, open(filename, 'r'))
 
 ftp.quit()
