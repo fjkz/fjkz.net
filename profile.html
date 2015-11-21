@@ -18,6 +18,20 @@
     <!-- Custom styles for this template -->
     <link href="my-template.css" rel="stylesheet">
 
+    <style type="text/css">
+      .profile {
+        max-width: 720px;
+        text-align: center;
+      }
+      .row {
+        text-align: left;
+      }
+      .dl-horizontal dt{
+        overflow: visible;
+        text-align: left;
+      }
+    </style>
+
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
       <script src="lib/html5shiv.min.js"></script>
@@ -27,6 +41,7 @@
 
   <body>
 
+    <!-- Navigation Bar -->
     <nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container">
         <div class="navbar-header">
@@ -43,118 +58,175 @@
             <li class="active"><a href="">PROFILE</a></li>
             <li><a href="notes.html">NOTES</a></li>
           </ul>
-        </div><!--/.nav-collapse -->
+        </div>
       </div>
     </nav>
 
-    <div class="container">
-      <div class="my-template">
+    <!-- Main Contents-->
+    <div class="container profile">
 
-        <div class="page-header">
-          <h1>KAZUHO FUJII</h1>
+      <div class="page-header">
+        <h1>Kazuho Fujii</h1>
+      </div>
+
+      <p>
+        <img src="portrait.jpg" class="img-thumbnail" alt="portrait" />
+      </p>
+
+      <address>
+        <img src='email.png' height="24" alt="moc.laimg@iijuf.ohuzak" /> /
+        <a href="http://github.com/fjkz">
+          GitHub
+        </a> /
+        <a href="http://www.linkedin.com/in/kazuhofujii">
+          LinkedIn
+        </a>
+      </address>
+
+      <div class="row">
+        <div class="col-md-2">
+          <h4>Occupation</h4>
         </div>
-
-        <p>
-          <img src="portrait.jpg" class="img-thumbnail" alt="portrait" />
-        </p>
-
-        <p>
-          <img src='email.png' height="24" alt="moc.laimg@iijuf.ohuzak" /> /
-          <a href="http://github.com/fjkz">
-            GitHub
-          </a> /
-          <a href="http://www.linkedin.com/in/kazuhofujii">
-            LinkedIn
-          </a>
-        </p>
-        
-        <div class="page-header">
-          <h2>Occupation</h2>
-        </div>
-        <p><ul>
-          <li>
-            <b>Software Developer on the Road</b><br/>
-            Developing a software product for Hadoop.<br/>
-            Interested in
+        <div class="col-md-10">
+          <p>
+            <strong>Software Developer</strong><br/>
+            Developing a software product for Hadoop. Interested in
             <ul>
               <li>Distributed Computing,</li>
               <li>Open Source Software Business.</li>
             </ul>
-          </li>
-        </ul></p>
-
-        <div class="page-header">
-          <h2>Technical Skills</h2>
+          </p>
         </div>
-        <p><ul>
-          <li>
-            <b><i>Programming Languages: </i></b>
-            C, Java, Python
-          </li>
-          <li>
-            <b><i>Operating Systems: </i></b>
-            Linux
-          </li>
-        </ul></p>
+      </div>
 
-        <h3>Speciality</h3>
-        <p><ul>
-          <li><a href="oss.html">Hadoop</a></li>
-          <li>Distributed file system, data base management system</li>
-          <li>Numerical analysis and extreme tuning of the code</li>
-        </ul></p>
+      <div class="row">
+        <div class="col-md-2">
+          <h4>Technical Skills</h4>
+        </div>
+          <div class="col-md-10">
+          <p>
+            <dl class="dl-horizontal">
+              <dt>Programming Languages:</dt>
+              <dd>C, Java, Python, UNIX shell script</dd>
+              <dt>Development Tools:</dt>
+              <dd>Git, Subversion, Maven, JUnit, Jenkins</dd>
+            </dl>
+            Specialized in
+            <ul>
+              <li><a href="oss.html">Hadoop,</a></li>
+              <li>Distributed File System,</li>
+              <li>Numerical Analysis.</li>
+            </ul>
+          </p>
+        </div>
+      </div>
 
-        <!-- TODO
-        <div class="page-header">
-          <h2>Awards</h2>
+      <!--
+      <div class="row">
+        <div class="col-md-2">
+          <h4>Experience</h4>
+        </div>
+        <div class="col-md-10">
+          <div class="row">
+            <div class="col-md-10">
+              <p>
+                Fujitsu Ltd., Japan<br/>
+                <em>Software Developer</em>
+              </p>
+            </div>
+            <div class="col-md-2">
+              <p><small>Apr. 2013 to Present</small></p>
+            </div>
+          </div>
+          <p>
+            What I did there...
+          </p>
+        </div>
+      </div>
+      -->
+
+      <div class="row">
+        <div class="col-md-2">
+          <h4>Education</h4>
+        </div>
+        <div class="col-md-10">
+          <div class="row">
+            <div class="col-md-10">
+              <p>
+                <strong>Master of Engineering,</strong> Numerical Analysis<br/>
+                Kyoto University, Japan
+              </p>
+            </div>
+            <div class="col-md-2">
+              <p><small>Mar. 2013</small></p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-10">
+              <p>
+                <strong>Bachelor of Engineering,</strong> Mechanical Engineering<br/>
+                Kyoto University, Japan
+              </p>
+            </div>
+            <div class="col-md-2">
+              <p><small>Mar. 2010</small></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-2">
+          <h4>Certificates</h4>
+        </div>
+        <div class="col-md-10">
+          <div class="row">
+            <div class="col-md-10">
+              <p>
+                <strong>Associate Professional Engineer,</strong> Information Engineering<br/>
+                Ministry of Education, Culture, Sports, Science and Technology, Japan<br/>
+                Unregistered to the institution of Professional Engineer, Japan.
+              </p>
+            </div>
+            <div class="col-md-2">
+              <p><small>Dec. 2014</small></p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-10">
+              <p>
+                <strong>Database Specialist</strong><br/>
+                Ministry of Economy, Trade and Industry, Japan
+              </p>
+            </div>
+            <div class="col-md-2">
+              <p><small>Dec. 2014</small></p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-10">
+              <p>
+                <strong>Applied Information Technology Engineer</strong><br/>
+                Ministry of Economy, Trade and Industry, Japan
+              </p>
+            </div>
+            <div class="col-md-2">
+              <p><small>Jun. 2014</small></p>
+            </div>
+          </div>
+          <!--
+          <div class="row">
+            <div class="col-md-10">
+              <p>
+                TOEIC Score 740
+              </p>
+            </div>
+            <div class="col-md-2">
+              <p><small>Nov. 2013</small></p>
+            </div>
+          </div>
         </div>
         -->
-
-        <!-- TODO
-        <div class="page-header">
-          <h2>Publisity</h2>
-        </div>
-        -->
-
-        <!-- TODO
-        <div class="page-header">
-          <h2>Patents</h2>
-        </div>
-        -->
-
-        <div class="page-header">
-          <h2>Education</h2>
-        </div>
-        <p><ul>
-          <li>
-            <b>Master of Engineering,</b> Numerical Analysis<br/>
-            Kyoto University, Japan
-          </li>
-          <li>
-            <b>Bachelor of Engineering,</b> Mechanical Engineering<br/>
-            Kyoto University, Japan
-          </li>
-        </ul></p>
-
-        <div class="page-header">
-          <h2>Certificate</h2>
-        </div>
-        <p><ul>
-          <li>
-            <b><a href="https://www.jitec.ipa.go.jp/index-e.html">Database Specialist</a></b><br/>
-            Ministry of Economy, Trade and Industry, Japan
-          </li>
-          <li>
-            <b><a href="https://www.jitec.ipa.go.jp/index-e.html">Applied Information Technology Engineer</a></b><br/>
-            Ministry of Economy, Trade and Industry, Japan
-          </li>
-          <li>
-            <a href="http://www.engineer.or.jp/sub09/"><b>Associate Professional Engineer,</b> Information Engineering</a>
-            <span class="label label-default">Unregistered</span><br/>
-            Ministry of Education, Culture, Sports, Science and Technology, Japan
-          </li>
-        </ul></p>
-
       </div>
     </div><!-- /.container -->
 
