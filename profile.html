@@ -23,10 +23,13 @@
         max-width: 720px;
         text-align: center;
       }
+      .list-inline li:before {
+        content: '-';
+      }
       .row {
         text-align: left;
       }
-      .dl-horizontal dt{
+      .dl-horizontal dt {
         overflow: visible;
         text-align: left;
       }
@@ -74,13 +77,21 @@
       </p>
 
       <address>
-        <img src='email.png' height="24" alt="moc.laimg@iijuf.ohuzak" /> /
-        <a href="http://github.com/fjkz">
-          GitHub
-        </a> /
-        <a href="http://www.linkedin.com/in/kazuhofujii">
-          LinkedIn
-        </a>
+        <ul class="list-inline">
+          <li>
+            <img src='email.png' height="24" alt="moc.laimg@iijuf.ohuzak" />
+          </li>
+          <li>
+            <a href="http://github.com/fjkz">
+              GitHub
+            </a>
+          </li>
+          <li>
+            <a href="http://www.linkedin.com/in/kazuhofujii">
+              LinkedIn
+            </a>
+          </li>
+        </ul>
       </address>
 
       <div class="row">
