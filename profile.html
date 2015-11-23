@@ -15,23 +15,46 @@
     <!-- Bootstrap theme -->
     <link href="lib/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
 
-    <!-- Custom styles for this template -->
-    <link href="my-template.css" rel="stylesheet">
-
     <style type="text/css">
-      .profile {
-        max-width: 720px;
+      h1 {
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: bold;
+        font-size: 36pt;
         text-align: center;
       }
-      .list-inline li:before {
-        content: '-';
+      h5 {
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: bold;
+      }
+      address {
+        text-align: center;
+      }
+      ul {
+        padding-left: 30px;
+      }
+      .profile {
+        max-width: 210mm; /* A4 */
+        padding: 15mm;
+        font-family: Georgia, 'Times New Roman', Times, serif;
+        font-size: 12pt;
+        text-align: center;
+      }
+      .page-header {
+          border-bottom-color: #000000;
       }
       .row {
         text-align: left;
+        margin-top: 0px;
+        margin-bottom: 12px;
+      }
+      .date {
+        font-size: smaller;
       }
       .dl-horizontal dt {
         overflow: visible;
         text-align: left;
+        font-weight: normal;
+        font-style: italic;
       }
     </style>
 
@@ -68,39 +91,41 @@
     <!-- Main Contents-->
     <div class="container profile">
 
-      <div class="page-header">
-        <h1>Kazuho Fujii</h1>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="page-header">
+            <h1>Kazuho Fujii</h1>
+          </div>
+
+          <address>
+            <ul class="list-inline">
+              <li>
+                <img src='email.png' height="24" alt="moc.laimg@iijuf.ohuzak" />
+              </li>
+              <li>
+                <a href="http://github.com/fjkz">
+                  GitHub
+                </a>
+              </li>
+              <li>
+                <a href="http://www.linkedin.com/in/kazuhofujii">
+                  LinkedIn
+                </a>
+              </li>
+            </ul>
+          </address>
+        </div>
       </div>
 
-      <p>
-        <img src="portrait.jpg" class="img-thumbnail" alt="portrait" />
-      </p>
-
-      <address>
-        <ul class="list-inline">
-          <li>
-            <img src='email.png' height="24" alt="moc.laimg@iijuf.ohuzak" />
-          </li>
-          <li>
-            <a href="http://github.com/fjkz">
-              GitHub
-            </a>
-          </li>
-          <li>
-            <a href="http://www.linkedin.com/in/kazuhofujii">
-              LinkedIn
-            </a>
-          </li>
-        </ul>
-      </address>
+      <img src="portrait.jpg" class="img-thumbnail" alt="portrait" style="margin-bottom: 30px" />
 
       <div class="row">
         <div class="col-md-2">
-          <h4>Occupation</h4>
+          <h5>Occupation</h5>
         </div>
         <div class="col-md-10">
           <p>
-            <strong>Software Developer</strong><br/>
+            <i>Software Developer</i><br/>
             Developing a software product for Hadoop. Interested in
             <ul>
               <li>Distributed Computing,</li>
@@ -112,45 +137,41 @@
 
       <div class="row">
         <div class="col-md-2">
-          <h4>Technical Skills</h4>
+          <h5>TECHNICAL SKILLS</h5>
         </div>
-          <div class="col-md-10">
-          <p>
-            <dl class="dl-horizontal">
-              <dt>Programming Languages:</dt>
-              <dd>C, Java, Python, UNIX shell script</dd>
-              <dt>Development Tools:</dt>
-              <dd>Git, Subversion, Maven, JUnit, Jenkins</dd>
-            </dl>
-            Specialized in
-            <ul>
-              <li><a href="oss.html">Hadoop,</a></li>
-              <li>Distributed File System,</li>
-              <li>Numerical Analysis.</li>
-            </ul>
-          </p>
+        <div class="col-md-10">
+          <dl class="dl-horizontal">
+            <dt>Programming Languages:</dt>
+            <dd>C, Java, Python, UNIX shell script</dd>
+            <dt>Development Tools:</dt>
+            <dd>Git, Subversion, Maven, JUnit, Jenkins</dd>
+          </dl>
+          Specialized in
+          <ul>
+            <li><a href="oss.html">Hadoop,</a></li>
+            <li>Distributed File System,</li>
+            <li>Numerical Analysis.</li>
+          </ul>
         </div>
       </div>
 
       <!--
       <div class="row">
         <div class="col-md-2">
-          <h4>Experience</h4>
+          <h5>EXPERIENCE</h5>
         </div>
         <div class="col-md-10">
           <div class="row">
             <div class="col-md-10">
-              <p>
-                Fujitsu Ltd., Japan<br/>
-                <em>Software Developer</em>
-              </p>
+                <i>Software Developer</i><br/>
+                Fujitsu Ltd., Japan
             </div>
             <div class="col-md-2">
-              <p><small>Apr. 2013 to Present</small></p>
+              <div class="small">Apr. 2013 to Present</div>
             </div>
           </div>
           <p>
-            What I did there...
+            Developing a distributed file system. It is used as an alternative file system for Hadoop and integrated into network attached storage (NAS).
           </p>
         </div>
       </div>
@@ -158,29 +179,25 @@
 
       <div class="row">
         <div class="col-md-2">
-          <h4>Education</h4>
+          <h5>EDUCATION</h5>
         </div>
         <div class="col-md-10">
           <div class="row">
             <div class="col-md-10">
-              <p>
-                <strong>Master of Engineering,</strong> Numerical Analysis<br/>
-                Kyoto University, Japan
-              </p>
+              <i>Master of Engineering,</i> Numerical Analysis<br/>
+              Kyoto University, Japan
             </div>
             <div class="col-md-2">
-              <p><small>Mar. 2013</small></p>
+              <div class="date">Mar. 2013</div>
             </div>
           </div>
           <div class="row">
             <div class="col-md-10">
-              <p>
-                <strong>Bachelor of Engineering,</strong> Mechanical Engineering<br/>
-                Kyoto University, Japan
-              </p>
+              <i>Bachelor of Engineering,</i> Mechanical Engineering<br/>
+              Kyoto University, Japan
             </div>
             <div class="col-md-2">
-              <p><small>Mar. 2010</small></p>
+              <div class="date">Mar. 2010</div>
             </div>
           </div>
         </div>
@@ -188,56 +205,48 @@
 
       <div class="row">
         <div class="col-md-2">
-          <h4>Certificates</h4>
+          <h5>CERTIFICATES</h5>
         </div>
         <div class="col-md-10">
           <div class="row">
             <div class="col-md-10">
-              <p>
-                <strong>Associate Professional Engineer,</strong> Information Engineering<br/>
-                Ministry of Education, Culture, Sports, Science and Technology, Japan<br/>
-                Unregistered to the institution of Professional Engineer, Japan.
-              </p>
+              <i>Database Specialist</i><br/>
+              Ministry of Economy, Trade and Industry, Japan
             </div>
             <div class="col-md-2">
-              <p><small>Dec. 2014</small></p>
+              <div class="date">Jun. 2015</div>
             </div>
           </div>
           <div class="row">
             <div class="col-md-10">
-              <p>
-                <strong>Database Specialist</strong><br/>
-                Ministry of Economy, Trade and Industry, Japan
-              </p>
+              <i>Applied Information Technology Engineer</i><br/>
+              Ministry of Economy, Trade and Industry, Japan
             </div>
             <div class="col-md-2">
-              <p><small>Dec. 2014</small></p>
+              <div class="date">Dec. 2014</div>
             </div>
           </div>
           <div class="row">
             <div class="col-md-10">
-              <p>
-                <strong>Applied Information Technology Engineer</strong><br/>
-                Ministry of Economy, Trade and Industry, Japan
-              </p>
+              <i>Associate Professional Engineer,</i> Information Engineering<br/>
+              Ministry of Education, Culture, Sports, Science and Technology, Japan<br/>
+              Unregistered to the institution of Professional Engineer, Japan.
             </div>
             <div class="col-md-2">
-              <p><small>Jun. 2014</small></p>
+              <div class="date">Dec. 2014</div>
             </div>
           </div>
           <!--
           <div class="row">
             <div class="col-md-10">
-              <p>
-                TOEIC Score 740
-              </p>
+              TOEIC Score 740
             </div>
             <div class="col-md-2">
-              <p><small>Nov. 2013</small></p>
+              <div class="date">Nov. 2013</div>
             </div>
           </div>
+          -->
         </div>
-        -->
       </div>
     </div><!-- /.container -->
 
