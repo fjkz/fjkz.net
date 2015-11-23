@@ -10,21 +10,38 @@
 
     <title>The optimum ratio of devices in tiered storage</title>
 
-    <!-- Bootstrap core CSS -->
     <link href="../lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap theme -->
-    <link href="../lib/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
 
-    <!-- Custom styles for this template -->
-    <link href="my-template.css" rel="stylesheet">
+    <style type="text/css">
+      h1 {
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: bold;
+        font-size: 24pt;
+        text-align: center;
+      }
+      .container {
+        max-width: 210mm; /* A4 */
+        padding: 15mm;
+        font-family: Georgia, 'Times New Roman', Times, serif;
+        font-size: 12pt;
+        text-align: left;
+      }
+      .signiture {
+        text-align: center;
+        font-size: larger;
+      }
+      .page-header {
+          border-bottom-color: #000000;
+      }
+    </style>
 
     <!-- MathJax -->
     <script type="text/x-mathjax-config">
-      MathJax.Hub.Config({ 
+      MathJax.Hub.Config({
         tex2jax: {
-          inlineMath: [['$','$'], ['\\(','\\)']], 
-          displayMath: [['$$','$$'], ['\\[','\\]']], 
-          processEscapes: true 
+          inlineMath: [['$','$'], ['\\(','\\)']],
+          displayMath: [['$$','$$'], ['\\[','\\]']],
+          processEscapes: true
         },
         TeX: {
           Macros: {
@@ -32,53 +49,27 @@
           },
           equationNumbers: {autoNumber: "AMS"}
         }
-      }); 
+      });
     </script>
     <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
   </head>
 
   <body>
 
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="../index.html">K.Fujii</a>
-        </div>
-        <div id="navbar" class="collapse navbar-collapse">
-          <ul class="nav navbar-nav">
-            <li><a href="../profile.html">PROFILE</a></li>
-            <li><a href="../notes.html">NOTES</a></li>
-          </ul>
-        </div><!--/.nav-collapse -->
-      </div>
-    </nav>
-
-    <div class="container my-template">
+    <div class="container">
       <div class="page-header">
         <h1>
           The optimum ratio of devices in tiered storage
         </h1>
       </div>
       <div class="signiture">
-        <p>
-          Kazuho Fujii
-        </p>
-        <p>
+          Kazuho Fujii <br/>
           Mar. 9, 2015
-        </p>
       </div>
 
-      <div class="page-header">
-        <h2 id="background">
-          Background
-        </h2>
-      </div>
+      <h2 id="background">
+        Background
+      </h2>
 
       <p>
       Storage tiering is a technique to create a high performance and cheap storage by combining several kinds of storage devices,
@@ -93,16 +84,14 @@
       and the access pattern obeys the Pareto distribution. Additionally I discuss about the condition of devices for effective tiering.
       </p>
 
-      <div class="page-header">
-        <h2 id="derivation-of-the-optimum-ratio-of-devices">
-          Derivation of the optimum ratio of devices 
-        </h2>
-      </div>
+      <h2 id="derivation-of-the-optimum-ratio-of-devices">
+        Derivation of the optimum ratio of devices
+      </h2>
       <p>
       I think about creating tiered storage with $N$ kinds of recording devices: Device-$1$, Device-$2$, $\cdots$, Device-$N$.
       I express the performance value of Device-$i$ as $q_i$ and express the cost per a unit capacity as $c_i$, where  $q_1 &lt; q_2 &lt; \cdots &lt; q_N$, $c_1 &lt; c_2 &lt; \cdots &lt; c_N$.
       I express the ratio of Device-$i$ capacity to the total capacity of a volume as $r_i$, where
- 
+
       $$\begin{align}
         \sum_{i=1}^N r_i &= 1 \label{sum_ratio}\\
         r_i & &gt; 0
@@ -122,7 +111,7 @@
       With multiplier $\mu$ and $\lambda$, I define a function $g$ as
 
       $$\begin{align}
-        g := \bar{q} - \lambda \left( \bar{c} - \sum_{i=1}^{N} r_i c_i \right) 
+        g := \bar{q} - \lambda \left( \bar{c} - \sum_{i=1}^{N} r_i c_i \right)
         -\mu \left( 1- \sum_{i=1}^N r_i \right)
       \end{align}$$
 
@@ -171,7 +160,7 @@
       $$\begin{align}
         p_i &= \frac{\displaystyle{\int_{x_{i-1}}^{x_i} x f dx}}{\displaystyle{\int_{x_0}^{\infty} x f dx}} \nonumber\\
             &= \left(1-r_1-\cdots-r_{i-1}\right)^\frac{a-1}{a}
-              -\left(1-r_1-\cdots-r_i\right)^\frac{a-1}{a} 
+              -\left(1-r_1-\cdots-r_i\right)^\frac{a-1}{a}
       \end{align}$$
       .
       The mean performance $\bar{q}$ is
@@ -191,7 +180,7 @@
       r_1&=(\bar{c}-c_1)\left\{
         \sum_{i=1}^{N-1}\Delta c_i \left(\frac{\Delta c_i}{\Delta q_i}
         \right)^{-a}\right\}^{-1}
-        \left\{ 
+        \left\{
           -     \left(\frac{\Delta c_1}{\Delta q_1}
                 \right)^{-a}
         \right\}+1 \label{r1_c}\\
@@ -199,21 +188,23 @@
       r_i&=(\bar{c}-c_1)\left\{
         \sum_{i=1}^{N-1}\Delta c_i \left(\frac{\Delta c_i}{\Delta q_i}
         \right)^{-a}\right\}^{-1}
-        \left\{ 
+        \left\{
                 \left(\frac{\Delta c_{i-1}}{\Delta q_{i-1}}
                 \right)^{-a}
           -     \left(\frac{\Delta c_i}{\Delta q_i}
                 \right)^{-a}
-        \right\}, (i = 2, 3, \cdots, N-1)\label{ri_c}\\
+        \right\} \label{ri_c}\\
 
       r_N&=(\bar{c}-c_1)\left\{
         \sum_{i=1}^{N-1}\Delta c_i \left(\frac{\Delta c_i}{\Delta q_i}
         \right)^{-a}\right\}^{-1}
-        \left\{ 
+        \left\{
           \left(\frac{\Delta c_{N-1}}{\Delta q_{N-1}}
           \right)^{-a}
         \right\} \label{rN_c}
       \end{align}$$
+
+      , where $r_i$ are in cases of $ i = 2, 3, \cdots, N-1 $ and
 
       $$\begin{align}
         \Delta c_i &:= c_{i+1} - c_i \\
@@ -224,7 +215,7 @@
       \bar{q} = q_1 + \left(\bar{c}-c_1\right)^\frac{a-1}{a}
       \left\{\sum_{i=1}^{N-1} \Delta c_i
        \left(\frac{\Delta c_i}{\Delta q_i}\right)^{-a}
-       \right\}^{-\frac{a-1}{a}} 
+       \right\}^{-\frac{a-1}{a}}
        \left\{\sum_{j=1}^{N-1}
         \Delta q_j  \left(\frac{\Delta c_j}{\Delta q_j}\right)^{-a+1}
       \right\}
@@ -232,11 +223,9 @@
       .
       </p>
 
-      <div class="page-header">
-        <h2 id="discussion">
-          Discussion
-        </h2>
-      </div>
+      <h2 id="discussion">
+        Discussion
+      </h2>
 
       <p>
       In the parameters of the assumed probability distribution, $x_0$ doesn't appear but just the Pareto coefficient $a$ appears.
@@ -266,12 +255,10 @@
       In this case we should apply \eqref{r1_c}\eqref{ri_c}\eqref{rN_c} with removing the lowest performance device.
       </p>
 
-      <div class="page-header">
-        <h2 id="conclusion">
-           Conclusion
-        </h2>
-      </div>
-      
+      <h2 id="conclusion">
+          Conclusion
+      </h2>
+
       <p>
       In this report the optimum ratio of devices are derived that maximize a tiered storage performance.
       It can be applied to designing tiered storage or developing a software that automatically adjusts tiering system configurations.
@@ -282,11 +269,9 @@
       Some tiered storage systems might take a penalty by unsatisfying the conditions.
       </p>
 
-      <div class="page-header">
-        <h2 id="appendix">
-          Appendix 
-        </h2>
-      </div>
+      <h2 id="appendix">
+        Appendix
+      </h2>
 
       <p>
       As appendicies I considered about
@@ -300,13 +285,5 @@
       </p>
 
     </div><!-- /.container -->
-
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="../lib/jquery.min.js"></script>
-    <script src="../lib/bootstrap/js/bootstrap.min.js"></script>
-    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <script src="../lib/ie10-viewport-bug-workaround.js"></script>
   </body>
 </html>

@@ -10,21 +10,38 @@
 
     <title>Stability of numerical analysis about free surface flow</title>
 
-    <!-- Bootstrap core CSS -->
     <link href="../lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap theme -->
-    <link href="../lib/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
 
-    <!-- Custom styles for this template -->
-    <link href="my-template.css" rel="stylesheet">
+    <style type="text/css">
+      h1 {
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: bold;
+        font-size: 24pt;
+        text-align: center;
+      }
+      .container {
+        max-width: 210mm; /* A4 */
+        padding: 15mm;
+        font-family: Georgia, 'Times New Roman', Times, serif;
+        font-size: 12pt;
+        text-align: left;
+      }
+      .signiture {
+        text-align: center;
+        font-size: larger;
+      }
+      .page-header {
+          border-bottom-color: #000000;
+      }
+    </style>
 
     <!-- MathJax -->
     <script type="text/x-mathjax-config">
-      MathJax.Hub.Config({ 
+      MathJax.Hub.Config({
         tex2jax: {
-          inlineMath: [['$','$'], ['\\(','\\)']], 
-          displayMath: [['$$','$$'], ['\\[','\\]']], 
-          processEscapes: true 
+          inlineMath: [['$','$'], ['\\(','\\)']],
+          displayMath: [['$$','$$'], ['\\[','\\]']],
+          processEscapes: true
         },
         TeX: {
           Macros: {
@@ -32,53 +49,27 @@
           },
           equationNumbers: {autoNumber: "AMS"}
         }
-      }); 
+      });
     </script>
     <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
   </head>
 
   <body>
 
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="../index.html">K.Fujii</a>
-        </div>
-        <div id="navbar" class="collapse navbar-collapse">
-          <ul class="nav navbar-nav">
-            <li><a href="../profile.html">PROFILE</a></li>
-            <li><a href="../notes.html">NOTES</a></li>
-          </ul>
-        </div><!--/.nav-collapse -->
-      </div>
-    </nav>
-
-    <div class="container my-template">
+    <div class="container">
       <div class="page-header">
         <h1>
           Stability of numerical analysis about free surface flow
         </h1>
       </div>
       <div class="signiture">
-        <p>
-          Kazuho Fujii
-        </p>
-        <p>
+          Kazuho Fujii<br/>
           Mar. 9, 2015
-        </p>
       </div>
 
-      <div class="page-header">
-        <h2 id="background">
-          Background
-        </h2>
-      </div>
+      <h2 id="background">
+        Background
+      </h2>
 
       <p>
         In numerical analysis with finite difference method which grid size is $\Delta$, the fact is known that a time step $\Delta t$ can not be more than some values for calculation stability. For example, The condition of the Courant's number or the diffusion number are famous: respectively $u\Delta t/\Delta &lt; 1$ in the advection equation (CFL condition) and $D\Delta t/\Delta^2 &lt; 0.5$ in the diffusion equation, where $u$ and $D$ are respectively a flow speed and a diffusion coefficient.
@@ -90,11 +81,9 @@
         In this report, I think about calculation stability with von Neumann’s analysis method in the case of the small amplitude wave.
       </p>
 
-      <div class="page-header">
-        <h2 id="analyzed-equations">
-          Analyzed equations
-        </h2>
-      </div>
+      <h2 id="analyzed-equations">
+        Analyzed equations
+      </h2>
 
       <p>
         I think about Euler’s equation and the equation of continuity:
@@ -109,15 +98,15 @@
       </p>
       <p>
         I can not apply the von Neumann’s method to the raw Euler’s equation, which has a nonlinear term. I assume that surface elevation $\eta$ is enough small and depth of water is enough deep. In the case, I can remove the nonlinear term because velocity fluctuations by the wave are negligible small;
- 
+
         $$\begin{align}
-          \frac{\partial \bm{u}}{\partial t} 
+          \frac{\partial \bm{u}}{\partial t}
             &= - \rho^{-1}\nabla P \label{linear-euler}\\
           \nabla \cdot \bm{u} &= 0
         \end{align}$$
 
         Boundary conditions in the assumptions are
-        
+
         $$\begin{align}
           \bm{u} = 0 &{\quad\mathrm{as}\quad}z \to -\infty \\
           - \frac{P}{\rho}
@@ -128,13 +117,12 @@
             = w &{\quad\mathrm{on}\quad}z=0
         \end{align}$$
 
-        , where $g$ means gravity acceleration and $\gamma$ means surface tension divided by density $\rho$. The boundary at $z = 0$ means the water surface.</p>
+        , where $g$ means gravity acceleration and $\gamma$ means surface tension divided by density $\rho$. The boundary at $z = 0$ means the water surface.
+      </p>
 
-      <div class="page-header">
-        <h2 id="derivation-of-stability-conditions">
-          Derivation of stability conditions
-        </h2>
-      </div>
+      <h2 id="derivation-of-stability-conditions">
+        Derivation of stability conditions
+      </h2>
 
       <p>
         I think about the effects of horizontal and time discretization. For vertically the domain is not discretized here. For spacial difference, I analyzed three grid systems: the regular grid system and the collocate grid system and the staggered grid system; for time integration, I analyzed the Euler’s explicit scheme. I write detail just about the case of using the regular grid system and the Euler’s explicit scheme. Other cases can be analyzed in the same way.
@@ -146,14 +134,14 @@
         And I write vertical differential $\partial/\partial z, \partial^2/\partial z^2$ with $()', ()''$
       </p>
       <p>
-        When governing equations are discretized with the regular grid system and the Euler’s explicit scheme, they are expressed as below: 
+        When governing equations are discretized with the regular grid system and the Euler’s explicit scheme, they are expressed as below:
 
         $$\begin{align}
           \frac{u^{n+1}_{l,m} - u^{n}_{l,m}}{\Delta t}
             &= - \rho^{-1}\frac{- P^{n}_{l-1,m} + P^{n}_{l+1,m}}{2\Delta x} \\
           \frac{v^{n+1}_{l,m} - v^{n}_{l,m}}{\Delta t}
             &= - \rho^{-1}\frac{- P^{n}_{l,m-1} + P^{n}_{l,m+1}}{2\Delta y} \\
-          \frac{w^{n+1}_{l,m}-w^{n}_{l,m}}{\Delta t} 
+          \frac{w^{n+1}_{l,m}-w^{n}_{l,m}}{\Delta t}
             &= - \rho^{-1}(P^{n}_{l,m})' \\
         \end{align}$$
         $$\begin{align}
@@ -165,15 +153,19 @@
         . Discretized boundary condition are below:
 
         $$\begin{align}
-          u^n_{l,m},\,v^n_{l,m},\,w^n_{l,m} = 0 &{\quad\mathrm{as}\quad}z \to -\infty \\
+          u^n_{l,m},\,v^n_{l,m},\,w^n_{l,m} = 0 \nonumber\\
+          {\quad\mathrm{as}\quad}z \to -\infty \\
+
           - \frac{P^n_{l,m}}{\rho} = - g\eta^n_{l,m}
             + \gamma \left(
-            \frac{\eta^n_{l-1,m} - 2\eta^n_{l,m} + \eta^n_{l+1,m}}{\Delta x^2} 
+            \frac{\eta^n_{l-1,m} - 2\eta^n_{l,m} + \eta^n_{l+1,m}}{\Delta x^2}
             + \frac{\eta^n_{l,m-1} - 2\eta^n_{l,m} + \eta^n_{l,m+1}}{\Delta y^2}
-            \right) &{\quad\mathrm{on}\quad} z=0 \\
+            \right) \nonumber\\
+          {\quad\mathrm{on}\quad} z=0 \\
+
           \frac{\eta^{n+1}_{l,m} - \eta^{n}_{l,m}}{\Delta t}
-            = w^{n+1}_{l,m}
-            &{\quad\mathrm{on}\quad}z=0 \label{kbc_discritize}
+            = w^{n+1}_{l,m} \nonumber\\
+          {\quad\mathrm{on}\quad}z=0 \label{kbc_discritize}
         \end{align}$$
 
         .
@@ -191,7 +183,7 @@ l\Delta x + ik_y m\Delta y) \\
           P^n_{l,m} &= \sum_{k_x}\sum_{k_y} \Phi^n\exp(ik_x l\Delta x + ik_y m\Delta y) \\
           \eta^n_{l,m} &= \sum_{k_x}\sum_{k_y} H^n\exp(ik_x l\Delta x + ik_y m\Delta y)
         \end{align}$$
-      </p>  
+      </p>
       <p>
         The equations about Fourier series at a wave number $(k_x, k_y)$ are
 
@@ -200,7 +192,7 @@ l\Delta x + ik_y m\Delta y) \\
             - \rho^{-1}\frac{- \exp(-i k_x \Delta x) +
             \exp(i k_x \Delta x)}{2\Delta x} \Phi^n
             \label{euler_fourier1} \\
-          \frac{V^{n+1}-V^{n}}{\Delta t} &= 
+          \frac{V^{n+1}-V^{n}}{\Delta t} &=
             -\rho^{-1}\frac{-\exp(-i k_y \Delta y) +
             \exp(i k_y \Delta y)}{2\Delta y} \Phi^n
             \label{euler_fourier2} \\
@@ -208,8 +200,9 @@ l\Delta x + ik_y m\Delta y) \\
         \end{align}$$
 
         $$\begin{align}
-          \frac{- \exp(- i k_x \Delta x) + \exp(i k_x \Delta x)}{2\Delta x}U^n 
-            + \frac{-\exp(- i k_y \Delta y) + \exp(i k_y \Delta y)}{2\Delta y}V^n+(W^n)' = 0\label{conti_fourier}
+          \frac{- \exp(- i k_x \Delta x) + \exp(i k_x \Delta x)}{2\Delta x}U^n
+            + \frac{-\exp(- i k_y \Delta y) + \exp(i k_y \Delta y)}{2\Delta y}V^n \nonumber\\
+          +(W^n)' = 0\label{conti_fourier}
         \end{align}$$
 
         $$\begin{align}
@@ -283,7 +276,7 @@ l\Delta x + ik_y m\Delta y) \\
         The condition about calculation stability is
 
         $$\begin{align}
-          |\alpha| &lt; 1, |\beta| &lt; 1 
+          |\alpha| &lt; 1, |\beta| &lt; 1
           \quad\mathrm{for}\ \mathrm{all}\ k_x, k_y
         \end{align}$$
         .
@@ -352,13 +345,12 @@ l\Delta x + ik_y m\Delta y) \\
         .
       </p>
       <p>
-        The condition is more strict with the staggered grid system because the resolution with the staggered grid system is higher with the regular or collocate system. We take difference between points having $2\Delta x$ or $2\Delta y$ distance with the regular or collocate grid system. However, we take difference between points having $\Delta x$ or $\Delta y$ distance in the staggered grid system.</p>
+        The condition is more strict with the staggered grid system because the resolution with the staggered grid system is higher with the regular or collocate system. We take difference between points having $2\Delta x$ or $2\Delta y$ distance with the regular or collocate grid system. However, we take difference between points having $\Delta x$ or $\Delta y$ distance in the staggered grid system.
+      </p>
 
-      <div class="page-header">
-        <h2 id="discussion">
-          Discussion
-        </h2>
-      </div>
+      <h2 id="discussion">
+        Discussion
+      </h2>
 
       <p>
         As $\sqrt{(\Delta /2)g + (2/\Delta)\gamma}$ means the velocity of a wave having $\pi \Delta$ length, the condition $\eqref{waveCFL}$ or $\eqref{waveCFL2}$ can be explained as CFL condition about the $\pi \Delta$ length wave, which is a capillary wave of the grid size. This condition is usually more strict than CFL condition about flow because $\Delta^{−3/2} &gt; \Delta^{−1}$.
@@ -375,7 +367,7 @@ l\Delta x + ik_y m\Delta y) \\
         $$\begin{align}
           \alpha = |\alpha|\exp{i\theta_\alpha}
         \end{align}$$
-        
+
         , $\theta_\alpha$ is
 
         $$\begin{align}
@@ -387,10 +379,10 @@ l\Delta x + ik_y m\Delta y) \\
           \sigma &= \frac{\theta_\alpha}{\Delta t} \\
                  &= \frac{1}{\Delta t}\tan^{-1} \sqrt{B^{-2}-1} \\
                  &= \frac{1}{\Delta t}\tan^{-1} \sqrt{\left\{1 - \frac{\Delta
-                      t^2}{2}\left(g +\gamma K^2\right)\kappa\right\}^{-2}-1} 
+                      t^2}{2}\left(g +\gamma K^2\right)\kappa\right\}^{-2}-1}
 \label{DescritizeAngularFrequency}
         \end{align}$$
-        
+
         . The case about $\beta$ is the same.
       </p>
       <p>
@@ -403,12 +395,9 @@ l\Delta x + ik_y m\Delta y) \\
         , they are matched with each other in low wave numbers. However, the discretized case is later than the non-discretized case in high wave numbers.
       </p>
 
-      <div class="page-header">
-        <h2 id="conclusion">
-           Conclusion
-        </h2>
-      </div>
-
+      <h2 id="conclusion">
+          Conclusion
+      </h2>
 
       <p>
         In this report I derived another stability condition of a numerical calculation about free surface flow. I noted that we must resolute transportation of the grid size capitally wave. This condition is not applied only in calculation of surface wave but also applied in calculation of maltiphase flow with level-set method or volume-of-fluid method or lattice Boltzmann method.
@@ -418,13 +407,5 @@ l\Delta x + ik_y m\Delta y) \\
       </p>
 
     </div><!-- /.container -->
-
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="../lib/jquery.min.js"></script>
-    <script src="../lib/bootstrap/js/bootstrap.min.js"></script>
-    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <script src="../lib/ie10-viewport-bug-workaround.js"></script>
   </body>
 </html>
