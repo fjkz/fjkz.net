@@ -92,20 +92,19 @@
       </h2>
       <p>
       I think about creating tiered storage with $N$ kinds of recording devices: Device-$1$, Device-$2$, $\cdots$, Device-$N$.
-      I express the performance value of Device-$i$ as $q_i$ and express the cost per a unit capacity as $c_i$, where  $q_1 &lt; q_2 &lt; \cdots &lt; q_N$, $c_1 &lt; c_2 &lt; \cdots &lt; c_N$.
+      I express the performance value of Device-$i$ as $q_i$ and express the cost per a unit capacity as $c_i$, where  $q_1 &lt; q_2 &lt; \cdots &lt; q_N$ and $c_1 &lt; c_2 &lt; \cdots &lt; c_N$.
       I express the ratio of Device-$i$ capacity to the total capacity of a volume as $r_i$, where
 
       $$\begin{align}
-        \sum_{i=1}^N r_i &= 1 \label{sum_ratio}\\
-        r_i & &gt; 0
+        \sum_{i=1}^N r_i &= 1, \label{sum_ratio}\\
+        r_i & &gt; 0.
       \end{align}$$
 
-      . The mean cost per a unit capacity $\bar{c}$ is
+      The mean cost per a unit capacity $\bar{c}$ is
 
       $$\begin{align}
-        \bar{c}=\sum_{i=1}^N r_i c_i \label{mean_cost}
+        \bar{c}=\sum_{i=1}^N r_i c_i. \label{mean_cost}
       \end{align}$$
-      .
       </p>
       <p>
       I think about the case where the mean cost $\bar{c}\ (c_1 \leq \bar{c} \leq c_N)$ is provided as a budget.
@@ -115,18 +114,17 @@
 
       $$\begin{align}
         g := \bar{q} - \lambda \left( \bar{c} - \sum_{i=1}^{N} r_i c_i \right)
-        -\mu \left( 1- \sum_{i=1}^N r_i \right)
+        -\mu \left( 1- \sum_{i=1}^N r_i \right).
       \end{align}$$
 
-      .
       I can obtain $r_1, r_2, \cdots ,r_N$ where $\bar{q}$ get an extreme value by solving the simultaneous equations of \eqref{sum_ratio}\eqref{mean_cost} and $N$ equations below:
 
       $$\begin{align}
         \frac{\partial g}{\partial r_i} = 0
-          ,\ (i = 1, 2, \cdots , N)
+          ,\ (i = 1, 2, \cdots , N).
           \label{lagrange_theory}
       \end{align}$$
-      .
+
       </p>
       <p>
       However, $\bar{q}$ is unknown. In order to solve the equations, I have to express $\bar{q}$ with an equation including $r_i$.
@@ -134,9 +132,9 @@
       That is we can express the probability $F$, where the number of access to a sector is not more than $x$, with the equation below:
 
       $$\begin{align}
-        F=1-\left(\frac{x_0}{x}\right)^a,\ (a &gt; 1,\ x_0 &gt; 0)
+        F=1-\left(\frac{x_0}{x}\right)^a,\ (a &gt; 1,\ x_0 &gt; 0).
       \end{align}$$
-      .
+
       </p>
       <p>
       $a$ and $x_0$ are parameters of the probability distribution.
@@ -146,7 +144,7 @@
 
       $$\begin{align}
       f &:= \frac{\partial F}{\partial x}\nonumber\\
-        & = \frac{a x_0^a}{x^{a+1}}
+        & = \frac{a x_0^a}{x^{a+1}}.
       \end{align}$$
       </p>
       <p>
@@ -155,26 +153,24 @@
       The relationship between $r_i$ and $x_i$ is
 
       $$\begin{align}
-        r_1+r_2+\cdots+r_i=1-\left(\frac{x_0}{x_i}\right)^a \\
-        x_i=x_0\left(1-r_1-r_2-\cdots-r_i\right)^{-\frac{1}{a}}
+        r_1+r_2+\cdots+r_i=1-\left(\frac{x_0}{x_i}\right)^a.
       \end{align}$$
 
-      . The probability of access to a sector on Device-$i$ $p_i$ is
+      The probability of access to a sector on Device-$i$ $p_i$ is
       $$\begin{align}
         p_i &= \frac{\displaystyle{\int_{x_{i-1}}^{x_i} x f dx}}{\displaystyle{\int_{x_0}^{\infty} x f dx}} \nonumber\\
             &= \left(1-r_1-\cdots-r_{i-1}\right)^\frac{a-1}{a}
-              -\left(1-r_1-\cdots-r_i\right)^\frac{a-1}{a}
+              -\left(1-r_1-\cdots-r_i\right)^\frac{a-1}{a}.
       \end{align}$$
-      .
+
       The mean performance $\bar{q}$ is
 
       $$\begin{align}
         \bar{q}&=\sum_{i=1}^N p_i q_i \nonumber\\
                &=\sum_{i=1}^N \left\{ \left(1-r_1-\cdots-r_{i-1}\right)^\frac{a-1}{a}
                               -\left(1-r_1-\cdots-r_i    \right)^\frac{a-1}{a}
-        \right\} q_i \label{mean_quality}
+        \right\} q_i. \label{mean_quality}
       \end{align}$$
-      .
       </p>
       <p>
       By solving the simultaneous equations \eqref{sum_ratio}\eqref{mean_cost}\eqref{lagrange_theory}\eqref{mean_quality},
@@ -186,7 +182,7 @@
         \left\{
           -     \left(\frac{\Delta c_1}{\Delta q_1}
                 \right)^{-a}
-        \right\}+1 \label{r1_c}\\
+        \right\}+1, \label{r1_c}\\
 
       r_i&=(\bar{c}-c_1)\left\{
         \sum_{i=1}^{N-1}\Delta c_i \left(\frac{\Delta c_i}{\Delta q_i}
@@ -196,7 +192,7 @@
                 \right)^{-a}
           -     \left(\frac{\Delta c_i}{\Delta q_i}
                 \right)^{-a}
-        \right\} \label{ri_c}\\
+        \right\}, \label{ri_c}\\
 
       r_N&=(\bar{c}-c_1)\left\{
         \sum_{i=1}^{N-1}\Delta c_i \left(\frac{\Delta c_i}{\Delta q_i}
@@ -204,16 +200,17 @@
         \left\{
           \left(\frac{\Delta c_{N-1}}{\Delta q_{N-1}}
           \right)^{-a}
-        \right\} \label{rN_c}
+        \right\}, \label{rN_c}
       \end{align}$$
 
-      , where $r_i$ are in cases of $ i = 2, 3, \cdots, N-1 $ and
+      where $r_i$ are in cases of $ i = 2, 3, \cdots, N-1 $
+      and $\Delta c_i, \Delta q_i$ are
 
       $$\begin{align}
-        \Delta c_i &:= c_{i+1} - c_i \\
-        \Delta q_i &:= q_{i+1} - q_i
+        \Delta c_i &:= c_{i+1} - c_i, \\
+        \Delta q_i &:= q_{i+1} - q_i.
       \end{align}$$
-      . In this case, $\bar{q}$ is
+      In this case, $\bar{q}$ is
       $$\begin{align}
       \bar{q} = q_1 + \left(\bar{c}-c_1\right)^\frac{a-1}{a}
       \left\{\sum_{i=1}^{N-1} \Delta c_i
@@ -221,9 +218,8 @@
        \right\}^{-\frac{a-1}{a}}
        \left\{\sum_{j=1}^{N-1}
         \Delta q_j  \left(\frac{\Delta c_j}{\Delta q_j}\right)^{-a+1}
-      \right\}
+      \right\}.
       \end{align}$$
-      .
       </p>
 
       <h2 id="discussion">
@@ -238,11 +234,11 @@
       The condition where the optimum ratio of Device-$i$ $r_i &gt; 0\ (i = 2, 3, \cdots, N-1)$  is
 
       $$\begin{align}
-        \frac{\Delta c_{i-1}}{\Delta q_{i-1}} &lt; \frac{\Delta c_i}{\Delta q_i}
+        \frac{\Delta c_{i-1}}{\Delta q_{i-1}} &lt; \frac{\Delta c_i}{\Delta q_i}.
         \label{satuation}
       \end{align}$$
 
-      . This means points $(c_i, q_i)$ are on a convex curve in a graph where $x$ and $y$ axes are respectively cost and performance.
+      This means points $(c_i, q_i)$ are on a convex curve in a graph where $x$ and $y$ axes are respectively cost and performance.
       We can not enhance mean performance or reduce mean cost if we combine drives that do not meet this condition.
       The combination of SSD, SAS HDD and SATA HDD could not meet this condition bacause SSD became cheaper.
       </p>
@@ -251,10 +247,10 @@
 
       $$\begin{align}
         \bar{c} &lt; c_1 + \left(\frac{\Delta c_1}{\Delta q_1}\right)^a \sum_{i=1}^{N-1}\Delta c_i
-         \left(\frac{\Delta c_i}{\Delta q_i}\right)^{-a} \label{over_budget}
+         \left(\frac{\Delta c_i}{\Delta q_i}\right)^{-a}. \label{over_budget}
       \end{align}$$
 
-      .This means that the lowest performance device has no effect when having enough budget.
+      This means that the lowest performance device has no effect when having enough budget.
       In this case we should apply \eqref{r1_c}\eqref{ri_c}\eqref{rN_c} with removing the lowest performance device.
       </p>
 
