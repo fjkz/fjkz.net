@@ -269,18 +269,46 @@
       </p>
 
       <h2 id="appendix">
-        Appendix
+        Appendix: The Case Provided a Performance Requirement
       </h2>
 
       <p>
-      As appendicies I considered about
-      <ul>
-        <li>the case provided a performance requirement</li>
-        <li>the case considering tiering efficiency</li>
-      </ul>
-      .
-      They are in <a href="optimum_ratio_of_tiers.pdf">PDF version</a>.
+        In the case where a required performance value $\bar{q}\ (q_1 \leq \bar{q} \leq q_N)$ is provided, we can get the optimum ratio with the same method. It is the ratio $r_1,r_2,\cdots,r_N$ which minimize mean costs $\bar{c}$ under the constraints \eqref{sum_ratio}\eqref{mean_quality}.
+      </p>
+      <p>
+        The result is below:
 
+        $$\begin{align}
+          r_1 &= \left(\bar{q}-q_1\right)^\frac{a}{a-1}
+            \left\{\sum_{i=1}^{N-1}\Delta q_i\left(\frac{\Delta c_i}{\Delta
+				      q_i}\right)^{-a+1}\right\}^{-\frac{a}{a-1}}
+            \left\{-\left(\frac{\Delta c_1}{\Delta q_1}\right)^{-a}\right\} +
+            1, \label{r1_q} \\
+
+          r_i &= \left(\bar{q}-q_1\right)^\frac{a}{a-1}
+            \left\{\sum_{i=1}^{N-1}\Delta q_i\left(\frac{\Delta c_i}{\Delta
+                    q_i}\right)^{-a+1}\right\}^{-\frac{a}{a-1}}
+            \left\{\left(\frac{\Delta c_{i-1}}{\Delta q_{i-1}}\right)^{-a}
+            -\left(\frac{\Delta c_i}{\Delta q_i}\right)^{-a}\right\},
+          \label{ri_q}\\
+
+          r_N &= \left(\bar{q}-q_1\right)^\frac{a}{a-1}
+          \left\{\sum_{i=1}^{N-1}\Delta q_i\left(\frac{\Delta c_i}{\Delta
+                  q_i}\right)^{-a+1}\right\}^{-\frac{a}{a-1}}
+          \left\{\left(\frac{\Delta c_{N-1}}{\Delta
+            q_{N-1}}\right)^{-a}\right\}.
+          \label{rN_q}
+        \end{align}$$
+
+        In this case,
+
+        $$\begin{align}
+          \bar{c} = c_1 + \left(\bar{q}-q_1\right)^\frac{a}{a-1}
+            \left\{\sum_{i=1}^{N-1}\Delta q_i\left(
+              \frac{\Delta c_i}{\Delta q_i}\right)^{-a+1}\right\}^{-\frac{a}{a-1}}
+            \left\{\sum_{j=1}^{N-1}\Delta c_j \left(
+              \frac{\Delta c_{j}}{\Delta q_{j}}\right)^{-a}\right\}.
+        \end{align}$$
       </p>
 
     </div><!-- /.container -->
