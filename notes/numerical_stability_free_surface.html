@@ -93,34 +93,34 @@
 
         $$\begin{align}
           \frac{\partial \bm{u}}{\partial t} + (\bm{u} \cdot \nabla)\bm{u}
-            &= - \rho^{-1}\nabla P \\
-          \nabla \cdot \bm{u} &= 0
+            &= - \rho^{-1}\nabla P, \\
+          \nabla \cdot \bm{u} &= 0,
         \end{align}$$
 
-        , where $\bm{u}=(u,v,w), \rho, P$ respectively mean velocity of fluid, density of fluid, pressure including gravity potential.
+        where $\bm{u}=(u,v,w), \rho, P$ respectively mean velocity of fluid, density of fluid, pressure including gravity potential.
       </p>
       <p>
         I can not apply the von Neumann’s method to the raw Euler’s equation, which has a nonlinear term. I assume that surface elevation $\eta$ is enough small and depth of water is enough deep. In the case, I can remove the nonlinear term because velocity fluctuations by the wave are negligible small;
 
         $$\begin{align}
           \frac{\partial \bm{u}}{\partial t}
-            &= - \rho^{-1}\nabla P \label{linear-euler}\\
-          \nabla \cdot \bm{u} &= 0
+            &= - \rho^{-1}\nabla P \label{linear-euler}, \\
+          \nabla \cdot \bm{u} &= 0.
         \end{align}$$
 
         Boundary conditions in the assumptions are
 
         $$\begin{align}
-          \bm{u} = 0 &{\quad\mathrm{as}\quad}z \to -\infty \\
+          \bm{u} = 0 &{\quad\mathrm{as}\quad}z \to -\infty, \\
           - \frac{P}{\rho}
             = - g\eta + \gamma \left(
             \frac{\partial^2}{\partial x^2} + \frac{\partial^2}{\partial y^2}
-            \right) \eta &{\quad\mathrm{on}\quad}z=0 \\
+            \right) \eta &{\quad\mathrm{on}\quad}z=0, \\
           \frac{\partial \eta}{\partial t}
-            = w &{\quad\mathrm{on}\quad}z=0
+            = w &{\quad\mathrm{on}\quad}z=0,
         \end{align}$$
 
-        , where $g$ means gravity acceleration and $\gamma$ means surface tension divided by density $\rho$. The boundary at $z = 0$ means the water surface.
+        where $g$ means gravity acceleration and $\gamma$ means surface tension divided by density $\rho$. The boundary at $z = 0$ means the water surface.
       </p>
 
       <h2 id="derivation-of-stability-conditions">
@@ -141,50 +141,54 @@
 
         $$\begin{align}
           \frac{u^{n+1}_{l,m} - u^{n}_{l,m}}{\Delta t}
-            &= - \rho^{-1}\frac{- P^{n}_{l-1,m} + P^{n}_{l+1,m}}{2\Delta x} \\
+            &= - \rho^{-1}\frac{- P^{n}_{l-1,m} + P^{n}_{l+1,m}}{2\Delta x}, \\
+
           \frac{v^{n+1}_{l,m} - v^{n}_{l,m}}{\Delta t}
-            &= - \rho^{-1}\frac{- P^{n}_{l,m-1} + P^{n}_{l,m+1}}{2\Delta y} \\
+            &= - \rho^{-1}\frac{- P^{n}_{l,m-1} + P^{n}_{l,m+1}}{2\Delta y}, \\
+
           \frac{w^{n+1}_{l,m}-w^{n}_{l,m}}{\Delta t}
-            &= - \rho^{-1}(P^{n}_{l,m})' \\
+            &= - \rho^{-1}(P^{n}_{l,m})',
         \end{align}$$
         $$\begin{align}
           0 = \frac{-u^{n}_{l-1,m}+u^{n}_{l+1,m}}{2\Delta x}
             + \frac{-v^{n}_{l,m-1}+v^{n}_{l,m+1}}{2\Delta y}
-            + (w^n_{l,m})'
+            + (w^n_{l,m})'.
         \end{align}$$
 
-        . Discretized boundary condition are below:
+        Discretized boundary condition are below:
 
         $$\begin{align}
-          u^n_{l,m},\,v^n_{l,m},\,w^n_{l,m} = 0 \nonumber\\
-          {\quad\mathrm{as}\quad}z \to -\infty \\
-
+          u^n_{l,m},\,v^n_{l,m},\,w^n_{l,m} = 0
+          {\quad\mathrm{as}\quad}z \to -\infty,
+        \end{align}$$
+        $$\begin{align}
           - \frac{P^n_{l,m}}{\rho} = - g\eta^n_{l,m}
             + \gamma \left(
             \frac{\eta^n_{l-1,m} - 2\eta^n_{l,m} + \eta^n_{l+1,m}}{\Delta x^2}
             + \frac{\eta^n_{l,m-1} - 2\eta^n_{l,m} + \eta^n_{l,m+1}}{\Delta y^2}
             \right) \nonumber\\
-          {\quad\mathrm{on}\quad} z=0 \\
-
-          \frac{\eta^{n+1}_{l,m} - \eta^{n}_{l,m}}{\Delta t}
-            = w^{n+1}_{l,m} \nonumber\\
-          {\quad\mathrm{on}\quad}z=0 \label{kbc_discritize}
+          {\quad\mathrm{on}\quad} z=0,
         \end{align}$$
-
-        .
+        $$\begin{align}
+          \frac{\eta^{n+1}_{l,m} - \eta^{n}_{l,m}}{\Delta t}
+            = w^{n+1}_{l,m}
+          {\quad\mathrm{on}\quad}z=0. \label{kbc_discritize}
+        \end{align}$$
       </p>
       <p>
         I transform $u^n_{l,m}, v^n_{l,m}, w^n_{l,m}, P^n_{l,m}, \eta^n_{l,m}$ to Fourier series as below:
 
         $$\begin{align}
-          u^n_{l,m} &= \sum_{k_x}\sum_{k_y} U^n\exp(ik_x
- l\Delta x + ik_y m\Delta y) \\
-          v^n_{l,m} &= \sum_{k_x}\sum_{k_y} V^n\exp(ik_x
-l\Delta x + ik_y m\Delta y) \\
-          w^n_{l,m} &= \sum_{k_x}\sum_{k_y} W^n\exp(ik_x
- l\Delta x + ik_y m\Delta y) \\
-          P^n_{l,m} &= \sum_{k_x}\sum_{k_y} \Phi^n\exp(ik_x l\Delta x + ik_y m\Delta y) \\
-          \eta^n_{l,m} &= \sum_{k_x}\sum_{k_y} H^n\exp(ik_x l\Delta x + ik_y m\Delta y)
+          u^n_{l,m} &= \sum_{k_x}\sum_{k_y} U^n
+            \exp(ik_x l\Delta x + ik_y m\Delta y), \\
+          v^n_{l,m} &= \sum_{k_x}\sum_{k_y} V^n
+            \exp(ik_x l\Delta x + ik_y m\Delta y), \\
+          w^n_{l,m} &= \sum_{k_x}\sum_{k_y} W^n
+            \exp(ik_x l\Delta x + ik_y m\Delta y), \\
+          P^n_{l,m} &= \sum_{k_x}\sum_{k_y} \Phi^n
+            \exp(ik_x l\Delta x + ik_y m\Delta y), \\
+          \eta^n_{l,m} &= \sum_{k_x}\sum_{k_y} H^n
+            \exp(ik_x l\Delta x + ik_y m\Delta y).
         \end{align}$$
       </p>
       <p>
@@ -194,95 +198,94 @@ l\Delta x + ik_y m\Delta y) \\
           \frac{U^{n+1}-U^{n}}{\Delta t} &=
             - \rho^{-1}\frac{- \exp(-i k_x \Delta x) +
             \exp(i k_x \Delta x)}{2\Delta x} \Phi^n
-            \label{euler_fourier1} \\
+            \label{euler_fourier1}, \\
           \frac{V^{n+1}-V^{n}}{\Delta t} &=
             -\rho^{-1}\frac{-\exp(-i k_y \Delta y) +
             \exp(i k_y \Delta y)}{2\Delta y} \Phi^n
-            \label{euler_fourier2} \\
-          \frac{W^{n+1}-W^{n}}{\Delta t} &= -\rho^{-1}(\Phi^n)'  \label{euler_fourier3}
+            \label{euler_fourier2}, \\
+          \frac{W^{n+1}-W^{n}}{\Delta t} &= -\rho^{-1}(\Phi^n)',  \label{euler_fourier3}
         \end{align}$$
 
         $$\begin{align}
           \frac{- \exp(- i k_x \Delta x) + \exp(i k_x \Delta x)}{2\Delta x}U^n
             + \frac{-\exp(- i k_y \Delta y) + \exp(i k_y \Delta y)}{2\Delta y}V^n \nonumber\\
-          +(W^n)' = 0\label{conti_fourier}
+          +(W^n)' = 0, \label{conti_fourier}
         \end{align}$$
 
         $$\begin{align}
-          U^n,V^n,W^n = 0 &{\quad\mathrm{as}\quad}z \to -\infty \label{bc_bottom_fourier}\\
-          - \rho^{-1}\Phi^n = - (g + K^2 \gamma) H^n &{\quad\mathrm{on}\quad}z=0\label{dbc_bottom_fourier} \\
-          \frac{H^{n+1} - H^n}{\Delta t} = W^{n+1} &{\quad\mathrm{on}\quad}z=0 \label{kbc_bottom_fourier}
+          U^n,V^n,W^n = 0 &{\quad\mathrm{as}\quad}z \to -\infty,
+            \label{bc_bottom_fourier}\\
+          - \rho^{-1}\Phi^n = - (g + K^2 \gamma) H^n &{\quad\mathrm{on}\quad}z=0,
+            \label{dbc_bottom_fourier} \\
+          \frac{H^{n+1} - H^n}{\Delta t} = W^{n+1} &{\quad\mathrm{on}\quad}z=0,
+            \label{kbc_bottom_fourier}
         \end{align}$$
 
+        where
         $$\begin{align}
           K := \sqrt{\frac{2(1-\cos (k_x \Delta x))}{\Delta x^2}
-          + \frac{2(1-\cos (k_y \Delta y))}{\Delta y^2}}
+          + \frac{2(1-\cos (k_y \Delta y))}{\Delta y^2}}.
         \end{align}$$
-        .
       </p>
       <p>
         With equations $\eqref{euler_fourier1}\eqref{euler_fourier2}\eqref{euler_fourier3}\eqref{conti_fourier}$, I get
 
         $$\begin{align}
-          -\kappa^2 \Phi^n + (\Phi^n)'' = 0\\
+          -\kappa^2 \Phi^n + (\Phi^n)'' = 0,
         \end{align}$$
+
+        where
         $$\begin{align}
           \kappa := \sqrt{\frac{2(1-\cos (2k_x \Delta x))}{(2\Delta x)^2}
-          + \frac{2(1-\cos (2k_y \Delta y))}{(2\Delta y)^2}}
+          + \frac{2(1-\cos (2k_y \Delta y))}{(2\Delta y)^2}}.
         \end{align}$$
-        .
       </p>
       <p>
         With boundary conditions $\eqref{bc_bottom_fourier}\eqref{dbc_bottom_fourier}$, I get
 
         $$\begin{align}
-          \Phi^n = \rho(g+\gamma K^2)H^n \exp (\kappa z)
+          \Phi^n = \rho(g+\gamma K^2)H^n \exp (\kappa z).
         \end{align}$$
-        .
-      </p>
-      <p>
+
         With $\eqref{euler_fourier3} \eqref{kbc_bottom_fourier}$, I get
 
         $$\begin{align}
           \frac{1}{\Delta t}\left(\frac{H^{n+2} - H^{n+1}}{\Delta t}
-          - \frac{H^{n+1} - H^{n}}{\Delta t}\right) = -(g+\gamma K^2)\kappa H^{n+1}
+          - \frac{H^{n+1} - H^{n}}{\Delta t}\right) = -(g+\gamma K^2)\kappa H^{n+1}.
         \end{align}$$
-        .
-      </p>
-      <p>
+
         Organizing this, I get
 
         $$\begin{align}
-          H^{n+2} - 2BH^{n+1} + H^{n} = 0 \label{recurrence2}\\
-          B := 1 - \frac{\Delta t^2}{2}\left(g + \gamma K^2 \right)\kappa
+          H^{n+2} - 2BH^{n+1} + H^{n} = 0 \label{recurrence2},
         \end{align}$$
 
-        .
+        where
+        $$\begin{align}
+          B := 1 - \frac{\Delta t^2}{2}\left(g + \gamma K^2 \right)\kappa.
+        \end{align}$$
       </p>
       <p>
         Defining $\alpha$ and $\beta$ as
 
         $$\begin{align}
-          \alpha = B + \sqrt{B^2-1} \label{solution_alpha}\\
-          \beta  = B - \sqrt{B^2-1} \label{solution_beta}
+          \alpha := B + \sqrt{B^2-1} \label{solution_alpha},\\
+          \beta  := B - \sqrt{B^2-1} \label{solution_beta},
         \end{align}$$
 
-        , the recursion about $H_n$ $\eqref{recurrence2}$ can be transformed as
+        the recursion about $H_n$ $\eqref{recurrence2}$ can be transformed as
 
         $$\begin{align}
-          H^{n+2} - \alpha H^{n+1} = \beta  (H^{n+1} - \alpha H^{n}) \\
-          H^{n+2} - \beta  H^{n+1} = \alpha (H^{n+1} - \beta  H^{n})
+          H^{n+2} - \alpha H^{n+1} = \beta  (H^{n+1} - \alpha H^{n}), \\
+          H^{n+2} - \beta  H^{n+1} = \alpha (H^{n+1} - \beta  H^{n}).
         \end{align}$$
-        .
-      </p>
       <p>
         The condition about calculation stability is
 
         $$\begin{align}
           |\alpha| &lt; 1, |\beta| &lt; 1
-          \quad\mathrm{for}\ \mathrm{all}\ k_x, k_y
+          \quad\mathrm{for}\ \mathrm{all}\ k_x, k_y.
         \end{align}$$
-        .
       </p>
       <p>
         In the case of $B^2 - 1 \leq 0$, the calculation is stable because $\alpha$ and $\beta$ are complex numbers and
@@ -292,60 +295,52 @@ l\Delta x + ik_y m\Delta y) \\
         .
         In the case of $B^2 - 1 > 0$, the calculation is unstable because
         $B > 1$ if $\alpha > 1$ and $B &lt; -1$ if $\beta &lt; -1$.
-      </p>
-      <p>
-        So, The stability condition is
+
+        Then the stability condition is
 
         $$\begin{align}
           B^2 - 1 \leq 0
-          \quad\mathrm{for}\ \mathrm{all}\ k_x, k_y \label{stability_cond}
+          \quad\mathrm{for}\ \mathrm{all}\ k_x, k_y. \label{stability_cond}
         \end{align}$$
-        .
       </p>
       <p>
         I define $\Delta$ as
 
         $$\begin{align}
         \frac{1}{\Delta^2} := \frac{1}{\Delta x^2} + \frac{1}{\Delta y^2},
-        \, \Delta &gt; 0
+        \, \Delta &gt; 0.
         \end{align}$$
-        .
-      </p>
-      <p>
+
         $B$ takes the maximum value
 
         $$\begin{align}
-          B = 1 {\quad\mathrm{as}\quad} K = \kappa = 0
+          B = 1 \quad\mathrm{as}\quad K = \kappa = 0.
         \end{align}$$
 
-        . It always satisfies $\eqref{stability_cond}$. $B$ takes the minimum value
+        It always satisfies $\eqref{stability_cond}$. $B$ takes the minimum value
 
         $$\begin{align}
           B= 1 - \frac{\Delta t^2}{4 \Delta} \left(g + \frac{4}{\Delta^2}\gamma\right)
-          {\quad\mathrm{as}\quad}K = \frac{2}{\Delta}, \kappa = \frac{1}{2\Delta}
+          {\quad\mathrm{as}\quad}K = \frac{2}{\Delta}, \kappa = \frac{1}{2\Delta}.
         \end{align}$$
 
-        . Therefore, in order to satisfy $\eqref{stability_cond}$ the minimum value of $B$ satisfies it.
+        Therefore, in order to satisfy $\eqref{stability_cond}$ the minimum value of $B$ satisfies it.
       </p>
       <p>
         In conclusion, the condition of calculation stability is
 
         $$\begin{align}
           \frac{\Delta t}{2\Delta}\sqrt{\frac{\Delta}{2}g +
-          \frac{2}{\Delta}\gamma} &lt; 1 \label{waveCFL}
+          \frac{2}{\Delta}\gamma} &lt; 1. \label{waveCFL}
         \end{align}$$
 
-        . In the cases of the collocate grid system, the same result is gotten.
-      </p>
-      <p>
+        In the cases of the collocate grid system, the same result is gotten.
         In the case of the staggered grid system, I can get the stability condition with the same way:
 
         $$\begin{align}
           \frac{\Delta t}{\Delta}\sqrt{\frac{\Delta}{2}g +
-          \frac{2}{\Delta}\gamma} &lt; 1 \label{waveCFL2}
+          \frac{2}{\Delta}\gamma} &lt; 1. \label{waveCFL2}
         \end{align}$$
-
-        .
       </p>
       <p>
         The condition is more strict with the staggered grid system because the resolution with the staggered grid system is higher with the regular or collocate system. We take difference between points having $2\Delta x$ or $2\Delta y$ distance with the regular or collocate grid system. However, we take difference between points having $\Delta x$ or $\Delta y$ distance in the staggered grid system.
@@ -368,34 +363,34 @@ l\Delta x + ik_y m\Delta y) \\
         When express $\alpha$ defined at $\eqref{solution_alpha}$ as
 
         $$\begin{align}
-          \alpha = |\alpha|\exp{i\theta_\alpha}
+          \alpha = |\alpha|\exp{i\theta_\alpha},
         \end{align}$$
 
-        , $\theta_\alpha$ is
+        $\theta_\alpha$ is
 
         $$\begin{align}
-          \theta_\alpha = \tan^{-1} \sqrt{B^{-2}-1}
+          \theta_\alpha = \tan^{-1} \sqrt{B^{-2}-1}.
         \end{align}$$
-        . The equation $\eqref{waveCFL}$ also means the condition where $\theta_\alpha$ exists for all wave numbers. $\theta_\alpha$ means the phase shift by a time step calculation in a wave which wave number is $k$. Because an angular frequency $\sigma$ is a phase shift per a unit time,
+        The equation $\eqref{waveCFL}$ also means the condition where $\theta_\alpha$ exists for all wave numbers. $\theta_\alpha$ means the phase shift by a time step calculation in a wave which wave number is $k$. Because an angular frequency $\sigma$ is a phase shift per a unit time,
 
         $$\begin{align}
           \sigma &= \frac{\theta_\alpha}{\Delta t} \\
                  &= \frac{1}{\Delta t}\tan^{-1} \sqrt{B^{-2}-1} \\
                  &= \frac{1}{\Delta t}\tan^{-1} \sqrt{\left\{1 - \frac{\Delta
-                      t^2}{2}\left(g +\gamma K^2\right)\kappa\right\}^{-2}-1}
+                      t^2}{2}\left(g +\gamma K^2\right)\kappa\right\}^{-2}-1}.
 \label{DescritizeAngularFrequency}
         \end{align}$$
 
-        . The case about $\beta$ is the same.
+        The case about $\beta$ is the same.
       </p>
       <p>
-        Compared with the angular frequency with the non-discretized case:
+        Compared with the angular frequency with the non-discretized case
 
         $$\begin{align}
-          \sigma = \sqrt{gk+\gamma k^3}
+          \sigma = \sqrt{gk+\gamma k^3},
         \end{align}$$
 
-        , they are matched with each other in low wave numbers. However, the discretized case is later than the non-discretized case in high wave numbers.
+        they are matched with each other in low wave numbers. However, the discretized case is later than the non-discretized case in high wave numbers.
       </p>
 
       <h2 id="conclusion">
