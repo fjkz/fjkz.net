@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Kazuho Fujii">
+    <link rel="shortcut icon" href="favicon.ico">
+
+    <link href="../lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <style type="text/css">
+      h1 {
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: bold;
+        font-size: xx-large;
+        text-align: center;
+      }
+      h2 {
+        font-weight: bold;
+        font-size: x-large;
+      }
+      p {
+        text-align: justify;
+      }
+      .container {
+        max-width: 210mm; /* A4 */
+        padding: 15mm;
+        font-family: Georgia, 'Times New Roman', Times, serif;
+        font-size: 11pt;
+        text-align: left;
+      }
+      .signiture {
+        text-align: center;
+        font-size: larger;
+      }
+      .page-header {
+          border-bottom-color: #000000;
+      }
+    </style>
+
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [['$','$'], ['\\(','\\)']],
+          displayMath: [['$$','$$'], ['\\[','\\]']],
+          processEscapes: true
+        },
+        TeX: {
+          Macros: {
+            bm: ["{\\boldsymbol #1}", 1],
+          },
+          equationNumbers: {autoNumber: "AMS"}
+        }
+      });
+    </script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+
+    <title>Conditions of Devices for Effective Tiered Storage</title>
+  </head>
+
+  <body>
+
+    <div class="container">
+      <div class="page-header">
+        <h1>
+          Conditions of Devices for <br /> Effective Tiered Storage
+        </h1>
+      </div>
+      <div class="signiture">
+        Kazuho Fujii
+      </div>
+
+      <h2>
+        1. Introduction
+      </h2>
+
+      <p>
+      Storage tiering is a technique to create a high performance and cheap
+      storage by combining several kinds of storage devices. Tiered storage
+      system allocates frequently accessed data to high performance but
+      expensive devices, and it allocates rarely accessed data to cheaper but
+      slower device. The system collects access statistics and sometimes
+      optimizes data allocation.
+      For example, SSD, SAS HDD and SATA HDD are usually used for each tiers.
+      </p>
+      <p>
+      Caching is a similar technique with tiering. Caching duplicates data from
+      poor performance devices to high performance device when the data is
+      accessed. Compared to tiering, caching reallocates data more frequently.
+      Additionally we can use volatile memory for caching tiers such as RAM.
+      </p>
+      <p>
+      Only kinds of devices do not make storage tiers. Tiers can be made with
+      data formats (e.g., compressed data or raw data) and data positions (e.g.,
+      over the network or not). All schemes of saving data can be regarded as
+      tiers. That is, storage tiering is not technique only for storage
+      systems; all computer system is related to it.
+      </p>
+      <p>
+      Most of tiering technologies concern about data replacement. It is a
+      popular problem which data should be on high performance storage. Many
+      schemes are proposed that predict the next accessed data and enhance
+      probability of "cache hit". LRU (least recently used) method and LFU (least frequently used) method are well known.
+      </p>
+      <p>
+      In contrast constitution of tiers has not been concerned. This is because
+      configuration of tiers was static; it could not be changed flexibly.
+      However, vitalization is general technology now. We can create virtual
+      tiered storage consisted as we want.
+      </p>
+      <p>
+      Although there are many kinds of storage devices (including data format),
+      it is unclear what kinds of devices we should combine or how we should
+      decide the ratio of devices. If we can know them, we can design effective
+      storage.
+      </p>
+      <p>
+      In this report, I theoretically derive the optimum configuration of tiered
+      storage. The rest of this report is organized as follows:
+      Section 2 setups the analyzed system;
+      Section 3 introduces the assumption of the Pareto distribution access;
+      Section 4 calculates the mean performance of storage under the Pareto distribution access;
+      Section 5 derives theoretically optimized configuration of tiered storage;
+      Section 6 discusses about the condition of devices for effective tiering;
+      Section 7 describes the conclusion.
+      </p>
+
+      <h2>
+        2. Setup
+      </h2>
+
+      <p>
+      Now I think about creating tiered storage with $N$ kinds of recording
+      devices respectively named Device-$1$, Device-$2$, $\cdots$, Device-$N$.
+      Device-$1$ has the lowest performance but it is the most cost-effective.
+      Device-$N$ has the highest performance but it is the most expensive.
+      </p>
+      <p>
+      I introduce performance values of devices. The performance value of
+      Device-$i$ is expressed with $q_i$. Then, $0 &lt; q_1 &lt; q_2 &lt;
+      \cdots &lt; q_N$. The performance value of a device represents any
+      performance characteristic of the device (e.g., random read, sequential
+      read) with a single value. Of course measuring this value is
+      difficult, but defining it is convenient for a theoretical discussion.
+      </p>
+      <p>
+      Similarly I express the cost per a unit capacity of Device-$i$ with
+      $c_i$. Then, $0 &lt; c_1 &lt; c_2 &lt; \cdots &lt; c_N$. Caching copy
+      data from a device to another device. In this case $c_i$ includes costs
+      of both of the devices.
+      </p>
+      <p>
+      I express the capacity ratio of Device-$i$ to the total capacity of the
+      volume with $r_i$. By definition,
+
+      $$\begin{align}
+        \sum_{i=1}^N r_i = 1. \label{sum_ratio}
+      \end{align}$$
+
+      The mean cost per a unit capacity $\bar{c}$ is
+
+      $$\begin{align}
+        \bar{c}=\sum_{i=1}^N r_i c_i. \label{mean_cost}
+      \end{align}$$
+      </p>
+      <p>
+      The goal is to get the optimum values of $r_i$. Values $q_i, c_i$ are
+      given as catalog specifications of storage devices. And $\bar{c}$ is
+      given as a budget. Hence, the required values are $r_i$ where the tiered
+      storage get the highest performance.
+      </p>
+
+      <h2>
+        3. Pareto Distribution
+      </h2>
+
+      <p>
+      The optimum values of $r_i$ are different with access pattern to the
+      storage. We have to assume a probability distribution of access to
+      blocks of the storage.
+      </p>
+      <p>
+      Here, I assume that the access obeys the Pareto distribution. It is
+      sometimes called the law of 80:20 or the Zipf's law. Under the Pareto
+      distribution just few data are accessed mostly and most of data are
+      rarely accessed. This distribution can express "hot spots" and "long
+      tails". Tiering is effective in such cases.
+      </p>
+      <p>
+      In the Pareto distribution, the probability $F$, where the number of
+      access to a block is not more than $x$, is
+
+      $$\begin{align}
+        F = 1 - \left(\frac{x_0}{x}\right)^a,\
+          (a &gt; 1,\ x_0 &gt; 0).
+      \end{align}$$
+
+      $a$ and $x_0$ are parameters of the probability distribution. $a$ means
+      bias of access. It is called Pareto coefficient. As $a \approx 1$ access
+      is concentrated to a single block; as $a \to \infty$ access is uniformly
+      distributed, that is the number of access at each block is $x_0$.
+      </p>
+      <p>
+      The probability density function $f$ is
+
+      $$\begin{align}
+        f := \frac{\partial F}{\partial x}
+           = \frac{a x_0^a}{x^{a+1}}.
+      \end{align}$$
+      </p>
+      <h2>
+        4. Mean Performance
+      </h2>
+
+      <p>
+      For the next, I calculate the mean performance of the storage under the Pareto distribution access pattern.
+      <p>
+      </p>
+      I assume that the tiering is perfect. That is the higher accessed block
+      is always allocated to the higher performance device. Let Device-$i$ to
+      have blocks which access count $x$ is $x_{i-1} \leq x &lt; x_i$. Note that
+      $x_N = \infty$. Then, the relationship between $r_i$ and $x_i$ is
+
+      $$\begin{align}
+        r_1+r_2+\cdots+r_i=1-\left(\frac{x_0}{x_i}\right)^a.
+      \end{align}$$
+      <p>
+      </p>
+      The number of access to the tier of Device-$i$ equals
+      $\int_{x_{i-1}}^{x_i} x f dx$, and the total number of access to the
+      storage equals $\int_{x_0}^{\infty} x f dx$.
+      Therefore, the probability where an access is to the tier of Device-$i$ is
+      $$\begin{align}
+        p_i &= \frac{\displaystyle{\int_{x_{i-1}}^{x_i} x f dx}}{\displaystyle{\int_{x_0}^{\infty} x f dx}} \nonumber\\
+            &= \left(1-r_1-\cdots-r_{i-1}\right)^\frac{a-1}{a}
+              -\left(1-r_1-\cdots-r_i\right)^\frac{a-1}{a}.
+      \end{align}$$
+
+      Consequently, I can get the mean performance of tiered storage $\bar{q}$.
+      That is
+
+      $$\begin{align}
+        \bar{q}&=\sum_{i=1}^N p_i q_i \nonumber\\
+               &=\sum_{i=1}^N \left\{ \left(1-r_1-\cdots-r_{i-1}\right)^\frac{a-1}{a}
+                              -\left(1-r_1-\cdots-r_i    \right)^\frac{a-1}{a}
+        \right\} q_i. \label{mean_quality}
+      \end{align}$$
+      </p>
+
+      <h2>
+        5. The Optimum Ratio of Devices
+      </h2>
+
+      <p>
+      In this section I derive the optimum values of $r_i$.
+      Now I want to derive the ratio of each drives $r_1, r_2, \cdots, r_N$
+      which maximizes the mean performance value $\bar{q}$ under the
+      constraints \eqref{sum_ratio} \eqref{mean_cost}.
+      I can use the method of Lagrange multiplier for this problem.
+      With multiplier $\mu$ and $\lambda$, I define a function $g$ as
+
+      $$\begin{align}
+        g := \bar{q} - \lambda \left( \bar{c} - \sum_{i=1}^{N} r_i c_i \right)
+        -\mu \left( 1- \sum_{i=1}^N r_i \right).
+      \end{align}$$
+
+      I can obtain $r_1, r_2, \cdots ,r_N$ where $\bar{q}$ get an extreme value
+      by solving the simultaneous equations of
+      \eqref{sum_ratio} \eqref{mean_cost} and following $N$ equations:
+
+      $$\begin{align}
+        \frac{\partial g}{\partial r_i} = 0
+          ,\ (i = 1, 2, \cdots , N).
+          \label{lagrange_theory}
+      \end{align}$$
+
+      </p>
+      <p>
+      By solving the simultaneous equations \eqref{sum_ratio} \eqref{mean_cost}
+      \eqref{mean_quality} \eqref{lagrange_theory},
+      I can get the optimum ratio of each device $r_1,r_2,\cdots,r_N$ as
+      following:
+
+      $$\begin{align}
+      r_1&=(\bar{c}-c_1)\left\{
+        \sum_{i=1}^{N-1}\Delta c_i \left(\frac{\Delta c_i}{\Delta q_i}
+        \right)^{-a}\right\}^{-1}
+        \left\{
+          -     \left(\frac{\Delta c_1}{\Delta q_1}
+                \right)^{-a}
+        \right\}+1, \label{r1_c}\\
+      r_i&=(\bar{c}-c_1)\left\{
+        \sum_{i=1}^{N-1}\Delta c_i \left(\frac{\Delta c_i}{\Delta q_i}
+        \right)^{-a}\right\}^{-1}
+        \left\{
+                \left(\frac{\Delta c_{i-1}}{\Delta q_{i-1}}
+                \right)^{-a}
+          -     \left(\frac{\Delta c_i}{\Delta q_i}
+                \right)^{-a}
+        \right\}, \label{ri_c}\\
+      r_N&=(\bar{c}-c_1)\left\{
+        \sum_{i=1}^{N-1}\Delta c_i \left(\frac{\Delta c_i}{\Delta q_i}
+        \right)^{-a}\right\}^{-1}
+        \left\{
+          \left(\frac{\Delta c_{N-1}}{\Delta q_{N-1}}
+          \right)^{-a}
+        \right\}, \label{rN_c}
+      \end{align}$$
+
+      where
+
+      $$\begin{align}
+        \Delta c_i &:= c_{i+1} - c_i, \\
+        \Delta q_i &:= q_{i+1} - q_i.
+      \end{align}$$
+
+      Note that $r_i$ in the equation \eqref{ri_c} are in cases of
+      $ i = 2, 3, \cdots, N-1 $.
+
+      In this case, $\bar{q}$ gets the maximum value
+      $$\begin{align}
+      \bar{q} = q_1 + \left(\bar{c}-c_1\right)^\frac{a-1}{a}
+      \left\{\sum_{i=1}^{N-1} \Delta c_i
+       \left(\frac{\Delta c_i}{\Delta q_i}\right)^{-a}
+       \right\}^{-\frac{a-1}{a}}
+       \left\{\sum_{j=1}^{N-1}
+        \Delta q_j  \left(\frac{\Delta c_j}{\Delta q_j}\right)^{-a+1}
+      \right\}.
+      \end{align}$$
+      </p>
+
+      <h2>
+        6. Discussion
+      </h2>
+
+      <p>
+      Seeing equations \eqref{r1_c} \eqref{ri_c} \eqref{rN_c}, $x_0$ doesn't
+      appear but only the Pareto coefficient $a$ appears. Therefore, we have to
+      decide only $a$ when assuming the probability distribution. It differs in situations where storage used.
+      </p>
+      <p>
+      Discussing the condition where $r_i &gt; 0$, we can know which devices we
+      should select.
+      </p>
+      <p>
+      The condition where $r_1 &gt; 0$ in the equation \eqref{r1_c} is
+
+      $$\begin{align}
+        \bar{c} &lt; c_1 + \left(\frac{\Delta c_1}{\Delta q_1}\right)^a \sum_{i=1}^{N-1}\Delta c_i
+         \left(\frac{\Delta c_i}{\Delta q_i}\right)^{-a}. \label{over_budget}
+      \end{align}$$
+
+      This means that the lowest performance device has no effect when having
+      enough budget. In this case we should remove the lowest performance device and apply
+      equations \eqref{r1_c}\eqref{ri_c}\eqref{rN_c} again.
+      </p>
+      <p>
+      The condition where $r_i &gt; 0\ (i = 2, 3, \cdots, N-1)$ in the equation
+      \eqref{ri_c} is
+
+      $$\begin{align}
+        \frac{\Delta c_{i-1}}{\Delta q_{i-1}} &lt; \frac{\Delta c_i}{\Delta q_i}.
+        \label{satuation}
+      \end{align}$$
+
+      This condition means that points $(c_i, q_i)$ must be on a convex curve
+      in a graph where $x$ and $y$ axes are respectively cost and performance.
+      We can not get effective tiered storage if we combine drives that do not
+      meet this condition. The combination of SSD, SAS HDD and SATA HDD might
+      not meet this condition because SSD becomes cheaper.
+      </p>
+      <p>
+      The equation \eqref{rN_c} always satisfies $r_N > 0$. Hence, the highest
+      performance device always has effect. When a higher performance device
+      newly appears, we should use it.
+      </p>
+
+      <h2>
+        7. Conclusion
+      </h2>
+
+      <p>
+      In this report the optimum ratio of devices are derived that maximize a
+      tiered storage performance.
+      It can be applied to designing tiered storage or developing a software
+      that automatically adjusts tiering system configurations.
+      </p>
+      <p>
+      Additionally the fact is cleared that kinds of devices in tiers require
+      some conditions for effective performance.
+      Some tiered storage systems might take a penalty by unsatisfying the
+      conditions.
+      </p>
+
+      <h2>
+        Appendix: The Case Provided a Performance Requirement
+      </h2>
+
+      <p>
+        In the case where a required performance value
+        $\bar{q}\ (q_1 \leq \bar{q} \leq q_N)$ is provided, we can get the
+        optimum ratio with the same method. It is the ratio
+        $r_1,r_2,\cdots,r_N$ which minimize mean costs $\bar{c}$ under the
+        constraints \eqref{sum_ratio} \eqref{mean_quality}.
+      </p>
+      <p>
+        The result is as follows:
+
+        $$\begin{align}
+          r_1 &= \left(\bar{q}-q_1\right)^\frac{a}{a-1}
+            \left\{\sum_{i=1}^{N-1}\Delta q_i\left(\frac{\Delta c_i}{\Delta
+				      q_i}\right)^{-a+1}\right\}^{-\frac{a}{a-1}}
+            \left\{-\left(\frac{\Delta c_1}{\Delta q_1}\right)^{-a}\right\} +
+            1, \label{r1_q} \\
+          r_i &= \left(\bar{q}-q_1\right)^\frac{a}{a-1}
+            \left\{\sum_{i=1}^{N-1}\Delta q_i\left(\frac{\Delta c_i}{\Delta
+                    q_i}\right)^{-a+1}\right\}^{-\frac{a}{a-1}}
+            \left\{\left(\frac{\Delta c_{i-1}}{\Delta q_{i-1}}\right)^{-a}
+            -\left(\frac{\Delta c_i}{\Delta q_i}\right)^{-a}\right\},
+          \label{ri_q}\\
+          r_N &= \left(\bar{q}-q_1\right)^\frac{a}{a-1}
+            \left\{\sum_{i=1}^{N-1}\Delta q_i\left(\frac{\Delta c_i}{\Delta
+                    q_i}\right)^{-a+1}\right\}^{-\frac{a}{a-1}}
+            \left\{\left(\frac{\Delta c_{N-1}}{\Delta
+              q_{N-1}}\right)^{-a}\right\}.
+          \label{rN_q}
+        \end{align}$$
+
+        In this case, the mean cost gets the minimum value
+
+        $$\begin{align}
+          \bar{c} = c_1 + \left(\bar{q}-q_1\right)^\frac{a}{a-1}
+            \left\{\sum_{i=1}^{N-1}\Delta q_i\left(
+              \frac{\Delta c_i}{\Delta q_i}\right)^{-a+1}\right\}^{-\frac{a}{a-1}}
+            \left\{\sum_{j=1}^{N-1}\Delta c_j \left(
+              \frac{\Delta c_{j}}{\Delta q_{j}}\right)^{-a}\right\}.
+        \end{align}$$
+      </p>
+
+    </div><!-- /.container -->
+  </body>
+</html>
