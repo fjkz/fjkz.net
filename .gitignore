@@ -1,3 +1,7 @@
 setting.json
 .vscode
 *.swp
+*.pdf
+*.bak
+*.aux
+*.log
