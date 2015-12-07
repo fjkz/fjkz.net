@@ -8,8 +8,6 @@
     <meta name="author" content="Kazuho Fujii">
     <link rel="shortcut icon" href="favicon.ico">
 
-    <title>Stability of Numerical Analysis about Free Surface Flow</title>
-
     <link href="../lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
     <style type="text/css">
@@ -59,6 +57,8 @@
       });
     </script>
     <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+
+    <title>Stability of Numerical Analysis about Free Surface Flow</title>
   </head>
 
   <body>
@@ -71,15 +71,22 @@
         </h1>
       </div>
       <div class="signiture">
-          Kazuho Fujii
+        Kazuho Fujii
       </div>
 
-      <h2 id="background">
-        Background
+      <h2>
+        Introduction
       </h2>
 
       <p>
-        In numerical analysis with finite difference method which grid size is $\Delta$, the fact is known that a time step $\Delta t$ can not be more than some values for calculation stability. For example, The condition of the Courant's number or the diffusion number are famous: respectively $u\Delta t/\Delta &lt; 1$ in the advection equation (CFL condition) and $D\Delta t/\Delta^2 &lt; 0.5$ in the diffusion equation, where $u$ and $D$ are respectively a flow speed and a diffusion coefficient.
+        In numerical analysis with finite difference method the fact is known
+        that a time step can not be more than some values for calculation
+        stability. For example, The condition of the Courant's number or the
+        diffusion number are famous: respectively $u\Delta t/\Delta &lt; 1$ in
+        the advection equation (CFL condition) and $D\Delta t/\Delta^2 &lt;
+        0.5$ in the diffusion equation, where $\Delta$, $\Delta t$, $u$ and $D$
+        are respectively the gtid size, the time step, the flow speed and the
+        diffusion coefficient.
       </p>
       <p>
         However, calculation about free surface can be unstable whenever it satisfies these conditions. It requires yet another condition for stability.
@@ -88,7 +95,7 @@
         In this report, I think about calculation stability with von Neumann’s analysis method in the case of the small amplitude wave.
       </p>
 
-      <h2 id="analyzed-equations">
+      <h2>
         Analyzed Equations
       </h2>
 
@@ -104,7 +111,11 @@
         where $\bm{u}=(u,v,w), \rho, P$ respectively mean velocity of fluid, density of fluid, pressure including gravity potential.
       </p>
       <p>
-        I can not apply the von Neumann’s method to the raw Euler’s equation, which has a nonlinear term. I assume that surface elevation $\eta$ is enough small and depth of water is enough deep. In the case, I can remove the nonlinear term because velocity fluctuations by the wave are negligible small;
+        I can not apply the von Neumann’s method to the raw Euler’s equation,
+        which has a nonlinear term. I assume that surface elevation $\eta$ is
+        enough small and depth of water is enough deep. In the case, I can
+        remove the nonlinear term because velocity fluctuations by the wave are
+        negligible small. That is,
 
         $$\begin{align}
           \frac{\partial \bm{u}}{\partial t}
@@ -112,7 +123,7 @@
           \nabla \cdot \bm{u} &= 0.
         \end{align}$$
 
-        Boundary conditions in the assumptions are
+        Boundary conditions in the assumptions are as follows:
 
         $$\begin{align}
           \bm{u} = 0 &{\quad\mathrm{as}\quad}z \to -\infty, \\
@@ -127,21 +138,25 @@
         where $g$ means gravity acceleration and $\gamma$ means surface tension divided by density $\rho$. The boundary at $z = 0$ means the water surface.
       </p>
 
-      <h2 id="derivation-of-stability-conditions">
-        Derivation of Stability Conditions
+      <h2>
+        Stability Conditions
       </h2>
 
       <p>
         I think about the effects of horizontal and time discretization. For vertically the domain is not discretized here. For spacial difference, I analyzed three grid systems: the regular grid system and the collocate grid system and the staggered grid system; for time integration, I analyzed the Euler’s explicit scheme. I write detail just about the case of using the regular grid system and the Euler’s explicit scheme. Other cases can be analyzed in the same way.
       </p>
       <p>
-        I write intervals between grids for $x$ and $y$ directions with $\Delta x$ and $\Delta y$ respectively;
-        time step with $\Delta t$;
-        I write values of $u, v, w, P, \eta$ at a difference point ($x = l \Delta x, y = m \Delta y, t = n \Delta t$) with $u^n_{l,m}(z), v^n_{l,m}(z), w^n_{l,m}(z), P^n_{l,m}(z), \eta^n_{l,m}$ respectively.
-        And I write vertical differential $\partial/\partial z, \partial^2/\partial z^2$ with $()', ()''$
+        I express intervals between grids for $x$ and $y$ directions
+        respectively with $\Delta x$ and $\Delta y$ respectively,
+        express time step with $\Delta t$,
+        express values of $u, v, w, P, \eta$ at a difference point
+        ($x = l \Delta x, y = m \Delta y, t = n \Delta t$) respectively with
+        $u^n_{l,m}(z), v^n_{l,m}(z), w^n_{l,m}(z), P^n_{l,m}(z), \eta^n_{l,m}$.
+        And I express vertical differential $\partial/\partial z,
+        \partial^2/\partial z^2$ with $()', ()''$.
       </p>
       <p>
-        When governing equations are discretized with the regular grid system and the Euler’s explicit scheme, they are expressed as below:
+        When governing equations are discretized with the regular grid system and the Euler’s explicit scheme, they are written as follows:
 
         $$\begin{align}
           \frac{u^{n+1}_{l,m} - u^{n}_{l,m}}{\Delta t}
@@ -159,7 +174,7 @@
             + (w^n_{l,m})'.
         \end{align}$$
 
-        Discretized boundary condition are below:
+        Discretized boundary condition are following:
 
         $$\begin{align}
           u^n_{l,m},\,v^n_{l,m},\,w^n_{l,m} = 0
@@ -350,7 +365,7 @@
         The condition is more strict with the staggered grid system because the resolution with the staggered grid system is higher with the regular or collocate system. We take difference between points having $2\Delta x$ or $2\Delta y$ distance with the regular or collocate grid system. However, we take difference between points having $\Delta x$ or $\Delta y$ distance in the staggered grid system.
       </p>
 
-      <h2 id="discussion">
+      <h2>
         Discussion
       </h2>
 
@@ -397,12 +412,17 @@
         they are matched with each other in low wave numbers. However, the discretized case is later than the non-discretized case in high wave numbers.
       </p>
 
-      <h2 id="conclusion">
-          Conclusion
+      <h2>
+        Conclusion
       </h2>
 
       <p>
-        In this report I derived another stability condition of a numerical calculation about free surface flow. I noted that we must resolute transportation of the grid size capitally wave. This condition is not applied only in calculation of surface wave but also applied in calculation of maltiphase flow with level-set method or volume-of-fluid method or lattice Boltzmann method.
+        In this report I derived another stability condition of a numerical
+        calculation about free surface flow. I note that we must resolute
+        transportation of the grid size capitally wave. This condition is not
+        applied only in calculation of surface wave but also applied in
+        calculation of maltiphase flow with level-set method or volume-of-fluid
+        method or lattice Boltzmann method.
       </p>
       <p>
         Additionally, I comment that the mean flow is ignored here. In the case where the mean flow or fluctuation of large waves affect, small waves are transported on them. It means that the stability condition is to be more strict.

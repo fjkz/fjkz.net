@@ -24,19 +24,23 @@
 
 \title{Stability of numerical analysis about free surface flow}
 \author{Kazuho Fujii}
-\date{Mar. 9, 2015}
+\date{}
 
 \begin{document}
 
 \maketitle
 
-\section{Background}
-In numerical analysis with finite difference method which grid size is $\Delta$, the fact is known that a time step $\Delta t$ can not be more than some values for calculation stability.
-For example, The condition of the Courant's number or the diffusion number are famous:
-respectively $u\Delta t/\Delta<1$ in the advection equation (CFL condition) and $D\Delta t/\Delta^2<0.5$ in the diffusion equation,
-where $u$ and $D$ are respectively a flow speed and a diffusion coefficient.
+\section{Introduction}
+In numerical analysis with finite difference method the fact is known
+that a time step can not be more than some values for calculation
+stability. For example, The condition of the Courant's number or the
+diffusion number are famous: respectively $u\Delta t/\Delta < 1$ in
+the advection equation (CFL condition) and $D\Delta t/\Delta^2 <
+0.5$ in the diffusion equation, where $\Delta$, $\Delta t$, $u$ and $D$
+are respectively the gtid size, the time step, the flow speed and the
+diffusion coefficient.
 
-However, calculation about free surface can be unstable whenever it satisfies these conditions. It requires yet another condition for stability. 
+However, calculation about free surface can be unstable whenever it satisfies these conditions. It requires yet another condition for stability.
 
 In this report, I think about calculation stability with von Neumann's analysis method in the case of the small amplitude wave.
 
@@ -46,205 +50,202 @@ I think about Euler's equation and the equation of continuity:
 \begin{eqnarray}
 \frac{\partial \bm{u}}{\partial t}
  + (\bm{u} \cdot \nabla)\bm{u}
-&=& - \rho^{-1}\nabla P \\
-\nabla \cdot \bm{u} &=& 0 
+&=& - \rho^{-1}\nabla P, \\
+\nabla \cdot \bm{u} &=& 0,
 \end{eqnarray}
-, where $\bm{u}=(u,v,w)$, $\rho$, $P$ respectively mean velocity of fluid, density of fluid, pressure including gravity potential.
+where $\bm{u}=(u,v,w)$, $\rho$, $P$ respectively mean velocity of fluid, density of fluid, pressure including gravity potential.
 
-I can not apply the von Neumann's method to the raw Euler's equation, which has a nonlinear term.
-I assume that surface elevation $\eta$ is enough small and depth of water is enough deep.
-In the case, I can remove the nonlinear term because velocity fluctuations by the wave are negligible small;
+I can not apply the von Neumann’s method to the raw Euler’s equation,
+which has a nonlinear term. I assume that surface elevation $\eta$ is
+enough small and depth of water is enough deep. In the case, I can
+remove the nonlinear term because velocity fluctuations by the wave are
+negligible small. That is,
 \begin{eqnarray}
-\frac{\partial \bm{u}}{\partial t} 
-&=& - \rho^{-1}\nabla P \label{linear-euler}\\
-\nabla \cdot \bm{u} &=& 0 
+\frac{\partial \bm{u}}{\partial t}
+&=& - \rho^{-1}\nabla P, \label{linear-euler}\\
+\nabla \cdot \bm{u} &=& 0.
 \end{eqnarray}
 
-Boundary conditions in the assumptions are
+Boundary conditions in the assumptions are as follows:
 \begin{eqnarray}
- \bm{u} &=& 0 \as z \to -\infty \\
+ \bm{u} &=& 0 \as z \to -\infty, \\
 - \frac{P}{\rho}
 &=& - g\eta + \gamma \left(
   \frac{\partial^2}{\partial x^2} + \frac{\partial^2}{\partial y^2}
-  \right) \eta \on z=0 \\
+  \right) \eta \on z=0, \\
  \frac{\partial \eta}{\partial t}
-&=& w \on z=0
+&=& w \on z=0,
 \end{eqnarray}
-, where $g$ means gravity acceleration and $\gamma$ means surface tension divided by density $\rho$. The boundary at $z=0$ means the water surface.
+where $g$ means gravity acceleration and $\gamma$ means surface tension divided by density $\rho$. The boundary at $z=0$ means the water surface.
 
-\section{Derivation of stability conditions}
+\section{Stability conditions}
 
 I think about the effects of horizontal and time discretization. For vertically the domain is not discretized here.
 For spacial difference, I analyzed three grid systems: the regular grid system and the collocate grid system and the staggered grid system;
 for time integration, I analyzed the Euler's explicit scheme. I write detail just about the case of using the regular grid system and the Euler's explicit scheme. Other cases can be analyzed in the same way.
 
-I write intervals between grids for $x$ and $y$ directions with $\Delta x$ and $\Delta y$ respectively;
-time step with $\Delta t$;
-I write values of $u, v, w, P, \eta$ at a difference point ($x = l \Delta x, y = m \Delta y, t = n \Delta t$) with $u^n_{l,m}(z), v^n_{l,m}(z), w^n_{l,m}(z), P^n_{l,m}(z), \eta^n_{l,m}$ respectively.
-And I write vertical differential $\partial/\partial z, \partial^2/\partial z^2$ with $()', ()''$
+I express intervals between grids for $x$ and $y$ directions
+respectively with $\Delta x$ and $\Delta y$ respectively,
+express time step with $\Delta t$,
+express values of $u, v, w, P, \eta$ at a difference point
+($x = l \Delta x, y = m \Delta y, t = n \Delta t$) respectively with
+$u^n_{l,m}(z), v^n_{l,m}(z), w^n_{l,m}(z), P^n_{l,m}(z), \eta^n_{l,m}$.
+And I express vertical differential $\partial/\partial z,
+\partial^2/\partial z^2$ with $()', ()''$.
 
-When governing equations are discretized with the regular grid system and the Euler's explicit scheme, they are expressed as below:
+When governing equations are discretized with the regular grid system and the Euler’s explicit scheme, they are written as follows:
 \begin{eqnarray}
 \frac{u^{n+1}_{l,m} - u^{n}_{l,m}}{\Delta t}
- &=& - \rho^{-1}\frac{- P^{n}_{l-1,m} + P^{n}_{l+1,m}}{2\Delta x} \\
+ &=& - \rho^{-1}\frac{- P^{n}_{l-1,m} + P^{n}_{l+1,m}}{2\Delta x}, \\
 \frac{v^{n+1}_{l,m} - v^{n}_{l,m}}{\Delta t}
- &=& - \rho^{-1}\frac{- P^{n}_{l,m-1} + P^{n}_{l,m+1}}{2\Delta y} \\
+ &=& - \rho^{-1}\frac{- P^{n}_{l,m-1} + P^{n}_{l,m+1}}{2\Delta y}, \\
 \frac{w^{n+1}_{l,m}-w^{n}_{l,m}}{\Delta t} &=& -
- \rho^{-1}(P^{n}_{l,m})' \\
+ \rho^{-1}(P^{n}_{l,m})', \\
 0 &=&  \frac{-u^{n}_{l-1,m}+u^{n}_{l+1,m}}{2\Delta x}
 + \frac{-v^{n}_{l,m-1}+v^{n}_{l,m+1}}{2\Delta y}
-+ (w^n_{l,m})' 
++ (w^n_{l,m})'.
 \end{eqnarray}
-. Discretized boundary condition are below:
+Discretized boundary condition are following:
 \begin{eqnarray}
- u^n_{l,m},\,v^n_{l,m},\,w^n_{l,m} &=& 0 \as z \to -\infty \\
+ u^n_{l,m},\,v^n_{l,m},\,w^n_{l,m} &=& 0 \as z \to -\infty, \\
 - \frac{P^n_{l,m}}{\rho}
 &=& - g\eta^n_{l,m}
 + \gamma \left(
-  \frac{\eta^n_{l-1,m} - 2\eta^n_{l,m} + \eta^n_{l+1,m}}{\Delta x^2} 
+  \frac{\eta^n_{l-1,m} - 2\eta^n_{l,m} + \eta^n_{l+1,m}}{\Delta x^2}
 + \frac{\eta^n_{l,m-1} - 2\eta^n_{l,m} + \eta^n_{l,m+1}}{\Delta y^2}
-  \right) \nonumber \\&&\on z=0 \\
+  \right) \nonumber \\&&\on z=0, \\
  \frac{\eta^{n+1}_{l,m} - \eta^{n}_{l,m}}{\Delta t}
 &=& w^{n+1}_{l,m}
- \on z=0 \label{kbc_discritize}
+ \on z=0. \label{kbc_discritize}
 \end{eqnarray}
-. 
 
-I transform $u^n_{l,m}, v^n_{l,m}, w^n_{l,m}, P^n_{l,m}, \eta^n_{l,m}$ to Fourier series as below: 
+I transform $u^n_{l,m}, v^n_{l,m}, w^n_{l,m}, P^n_{l,m}, \eta^n_{l,m}$ to Fourier series as below:
 \begin{eqnarray}
 u^n_{l,m} &=& \sum_{k_x}\sum_{k_y} U^n\exp(ik_x
- l\Delta x + ik_y m\Delta y) \\
+ l\Delta x + ik_y m\Delta y), \\
 v^n_{l,m} &=& \sum_{k_x}\sum_{k_y} V^n\exp(ik_x
-l\Delta x + ik_y m\Delta y) \\
+l\Delta x + ik_y m\Delta y), \\
 w^n_{l,m} &=& \sum_{k_x}\sum_{k_y} W^n\exp(ik_x
- l\Delta x + ik_y m\Delta y) \\
+ l\Delta x + ik_y m\Delta y), \\
 P^n_{l,m} &=& \sum_{k_x}\sum_{k_y} \Phi^n\exp(ik_x l\Delta x +
- ik_y m\Delta y) \\
-\eta^n_{l,m} &=& \sum_{k_x}\sum_{k_y} H^n\exp(ik_x l\Delta x + ik_y m\Delta y)
+ ik_y m\Delta y), \\
+\eta^n_{l,m} &=& \sum_{k_x}\sum_{k_y} H^n\exp(ik_x l\Delta x + ik_y m\Delta y).
 \end{eqnarray}
-.
 
 The equations about Fourier series at a wave number $(k_x, k_y)$ are
 \begin{eqnarray}
 \frac{U^{n+1}-U^{n}}{\Delta t} &=&
  - \rho^{-1}\frac{- \exp(-i k_x \Delta x) +
  \exp(i k_x \Delta x)}{2\Delta x} \Phi^n
- \label{euler_fourier1} \\
-\frac{V^{n+1}-V^{n}}{\Delta t} &=& 
+ \label{euler_fourier1}, \\
+\frac{V^{n+1}-V^{n}}{\Delta t} &=&
  -\rho^{-1}\frac{-\exp(-i k_y \Delta y) +
- \exp(i k_y \Delta y)}{2\Delta y} \Phi^n
+ \exp(i k_y \Delta y)}{2\Delta y} \Phi^n,
   \label{euler_fourier2} \\
-\frac{W^{n+1}-W^{n}}{\Delta t} &=& -\rho^{-1}(\Phi^n)'  \label{euler_fourier3} \\
- 0 &=&\frac{- \exp(- i k_x \Delta x) + \exp(i k_x \Delta x)}{2\Delta x}U^n \nonumber\\
-&+& \frac{-\exp(- i k_y \Delta y) + \exp(i k_y \Delta y)}{2\Delta y}V^n+(W^n)' \label{conti_fourier} \\
-U^n,V^n,W^n &=& 0 \as z \to -\infty \label{bc_bottom_fourier}\\
+\frac{W^{n+1}-W^{n}}{\Delta t} &=& -\rho^{-1}(\Phi^n)',
+  \label{euler_fourier3} \\
+0 &=&\frac{- \exp(- i k_x \Delta x) + \exp(i k_x \Delta x)}{2\Delta x}U^n
+  \nonumber\\
+&+& \frac{-\exp(- i k_y \Delta y) + \exp(i k_y \Delta y)}{2\Delta y}V^n+(W^n)',
+  \label{conti_fourier} \\
+U^n,V^n,W^n &=& 0 \as z \to -\infty, \label{bc_bottom_fourier}\\
 - \rho^{-1}\Phi^n &=& - (g + K^2 \gamma) H^n \on
- z=0\label{dbc_bottom_fourier} \\
-\frac{H^{n+1} - H^n}{\Delta t} &=& W^{n+1} \on z=0 \label{kbc_bottom_fourier}
+ z=0,\label{dbc_bottom_fourier} \\
+\frac{H^{n+1} - H^n}{\Delta t} &=& W^{n+1} \on z=0, \label{kbc_bottom_fourier}
 \end{eqnarray}
-
+where
 \begin{equation}
 K := \sqrt{\frac{2(1-\cos (k_x \Delta x))}{\Delta x^2}
-          + \frac{2(1-\cos (k_y \Delta y))}{\Delta y^2}}
+          + \frac{2(1-\cos (k_y \Delta y))}{\Delta y^2}}.
 \end{equation}
-.
 
 With equations \eqref{euler_fourier1}\eqref{euler_fourier2}\eqref{euler_fourier3}\eqref{conti_fourier}, I get
 \begin{eqnarray}
--\kappa^2 \Phi^n + (\Phi^n)'' = 0
+-\kappa^2 \Phi^n + (\Phi^n)'' = 0,
 \end{eqnarray}
+where
 \begin{eqnarray}
 \kappa := \sqrt{\frac{2(1-\cos (2k_x \Delta x))}{(2\Delta x)^2}
-         + \frac{2(1-\cos (2k_y \Delta y))}{(2\Delta y)^2}}
+         + \frac{2(1-\cos (2k_y \Delta y))}{(2\Delta y)^2}}.
 \end{eqnarray}
-.
 
 With boundary conditions \eqref{bc_bottom_fourier}\eqref{dbc_bottom_fourier}, I get
 \begin{eqnarray}
-\Phi^n = \rho(g+\gamma K^2)H^n \exp (\kappa z)
+\Phi^n = \rho(g+\gamma K^2)H^n \exp (\kappa z).
 \end{eqnarray}
-.
-
 With \eqref{euler_fourier3} \eqref{kbc_bottom_fourier}, I get
 \begin{eqnarray}
 \frac{1}{\Delta t}\left(\frac{H^{n+2} - H^{n+1}}{\Delta t}
- - \frac{H^{n+1} - H^{n}}{\Delta t}\right) = -(g+\gamma K^2)\kappa H^{n+1}
+ - \frac{H^{n+1} - H^{n}}{\Delta t}\right) = -(g+\gamma K^2)\kappa H^{n+1}.
 \end{eqnarray}
-. Organizing this, I get
+Organizing this, I get
 \begin{equation}
-H^{n+2} - 2BH^{n+1} + H^{n} = 0 \label{recurrence2}
+H^{n+2} - 2BH^{n+1} + H^{n} = 0 \label{recurrence2},
 \end{equation}
+where
 \begin{equation}
-B := 1 - \frac{\Delta t^2}{2}\left(g + \gamma K^2 \right)\kappa
+B := 1 - \frac{\Delta t^2}{2}\left(g + \gamma K^2 \right)\kappa.
 \end{equation}
-.
 
 Defining $\alpha$ and $\beta$ as
 \begin{eqnarray}
-\alpha &:=& B + \sqrt{B^2-1} \label{solution_alpha}\\
-\beta  &:=& B - \sqrt{B^2-1} \label{solution_beta}
+\alpha &:=& B + \sqrt{B^2-1} \label{solution_alpha},\\
+\beta  &:=& B - \sqrt{B^2-1} \label{solution_beta},
 \end{eqnarray}
-, the recursion about $H^n$ \eqref{recurrence2} can be transformed as
+the recursion about $H^n$ \eqref{recurrence2} can be transformed as
 \begin{eqnarray}
-H^{n+2} - \alpha H^{n+1} &=& \beta  (H^{n+1} - \alpha H^{n}) \\
-H^{n+2} - \beta  H^{n+1} &=& \alpha (H^{n+1} - \beta  H^{n})
+H^{n+2} - \alpha H^{n+1} &=& \beta  (H^{n+1} - \alpha H^{n}), \\
+H^{n+2} - \beta  H^{n+1} &=& \alpha (H^{n+1} - \beta  H^{n}).
 \end{eqnarray}
-.
 
-The condition about calculation stability is 
+The condition about calculation stability is
 \begin{eqnarray}
-|\alpha| < 1, |\beta| < 1 
-\quad\mathrm{for}\ \mathrm{all}\ k_x, k_y
+|\alpha| < 1, |\beta| < 1
+\quad\mathrm{for}\ \mathrm{all}\ k_x, k_y.
 \end{eqnarray}
-.
 
 In the case of $B^2 - 1 \leq 0$, the calculation is stable because $\alpha$ and $\beta$ are complex numbers and
 $
-|\alpha|^2 = |\beta|^2 = 2B^2 - 1 \leq 1
+|\alpha|^2 = |\beta|^2 = 2B^2 - 1 \leq 1.
 $
-.
 In the case of $B^2 - 1 > 0$, the calculation is unstable because
 $B > 1$ if $\alpha > 1$ and $B < -1$ if $\beta < -1$.
 
-So, The stability condition is 
+So, The stability condition is
 \begin{eqnarray}
 B^2 - 1 \leq 0
-\quad\mathrm{for}\ \mathrm{all}\ k_x, k_y \label{stability_cond}
+\quad\mathrm{for}\ \mathrm{all}\ k_x, k_y. \label{stability_cond}
 \end{eqnarray}
-.
 
 I define $\Delta$ as
 \begin{equation}
 \frac{1}{\Delta^2} := \frac{1}{\Delta x^2} + \frac{1}{\Delta y^2}, \, \Delta
- > 0
+ > 0.
 \end{equation}
-. 
 
 $B$ takes the maximum value
 \begin{equation}
-B=1 \as K = \kappa = 0 
+B=1 \as K = \kappa = 0.
 \end{equation}
-. It always satisfies \eqref{stability_cond}. $B$ takes the minimum value
+It always satisfies \eqref{stability_cond}. $B$ takes the minimum value
 \begin{equation}
 B= 1 - \frac{\Delta t^2}{4 \Delta} \left(g + \frac{4}{\Delta^2}\gamma\right)
-\as K = \frac{2}{\Delta}, \kappa = \frac{1}{2\Delta}
+\as K = \frac{2}{\Delta}, \kappa = \frac{1}{2\Delta}.
 \end{equation}
-. Therefore, in order to satisfy \eqref{stability_cond} the minimum value of $B$ satisfies it.
+Therefore, in order to satisfy \eqref{stability_cond} the minimum value of $B$ satisfies it.
 
-In conclusion, the condition of calculation stability is 
+In conclusion, the condition of calculation stability is
 \begin{equation}
 \frac{\Delta t}{2\Delta}\sqrt{\frac{\Delta}{2}g +
-\frac{2}{\Delta}\gamma} < 1 \label{waveCFL}
+\frac{2}{\Delta}\gamma} < 1. \label{waveCFL}
 \end{equation}
-. 
 In the cases of the collocate grid system, the same result is gotten.
 
 In the case of the staggered grid system, I can get the stability condition with the same way:
 \begin{equation}
 \frac{\Delta t}{\Delta}\sqrt{\frac{\Delta}{2}g +
-\frac{2}{\Delta}\gamma} < 1 \label{waveCFL2}
+\frac{2}{\Delta}\gamma} < 1. \label{waveCFL2}
 \end{equation}
-.
 
 The condition is more strict with the staggered grid system because the resolution with the staggered grid system is higher with the regular or collocate system.
 We take difference between points having $2\Delta x$ or $2\Delta y$ distance with the regular or collocate grid system. However, we take difference between points having $\Delta x$ or $\Delta y$ distance in the staggered grid system.
@@ -255,42 +256,45 @@ As $\sqrt{(\Delta /2)g + (2/\Delta)\gamma}$ means the velocity of a wave having 
 the condition \eqref{waveCFL} or \eqref{waveCFL2} can be explained as CFL condition about the $\pi\Delta$ length wave, which is a capillary wave of the grid size.
 This condition is usually more strict than CFL condition about flow because $\Delta^{-3/2} > \Delta^{-1}$.
 
-Although viscosity and water depth are ignored, they don't affect the result because they reduce wave speed. 
+Although viscosity and water depth are ignored, they don't affect the result because they reduce wave speed.
 
 When we don't resolute the transport of the minimum wave which length is $2\Delta$, we can conduct a stable calculation. This is because velocity of wave is reduce by discretization as below.
 
 When express $\alpha$ defined at \eqref{solution_alpha} as
 \begin{equation}
-\alpha = |\alpha|\exp{i\theta_\alpha}
+\alpha = |\alpha|\exp{i\theta_\alpha},
 \end{equation}
-, $\theta_\alpha$ is 
+$\theta_\alpha$ is
 \begin{eqnarray}
-\theta_\alpha &=& \tan^{-1} \sqrt{B^{-2}-1}
+\theta_\alpha &=& \tan^{-1} \sqrt{B^{-2}-1}.
 \end{eqnarray}
-. The equation \eqref{waveCFL} also means the condition where $\theta_\alpha$ exists for all wave numbers.
+The equation \eqref{waveCFL} also means the condition where $\theta_\alpha$ exists for all wave numbers.
 $\theta_\alpha$ means the phase shift by a time step calculation in a wave which wave number is $k$.
 Because an angular frequency $\sigma$ is a phase shift per a unit time,
 \begin{eqnarray}
 \sigma &=& \frac{\theta_\alpha}{\Delta t} \\
 &=& \frac{1}{\Delta t}\tan^{-1} \sqrt{B^{-2}-1} \\
 &=& \frac{1}{\Delta t}\tan^{-1} \sqrt{\left\{1 - \frac{\Delta
-				      t^2}{2}\left(g +\gamma K^2\right)\kappa\right\}^{-2}-1} 
+				      t^2}{2}\left(g +\gamma K^2\right)\kappa\right\}^{-2}-1}.
 \label{DescritizeAngularFrequency}
 \end{eqnarray}
-. The case about $\beta$ is the same.
+The case about $\beta$ is the same.
 
-Compared with the angular frequency with the non-discretized case: 
+Compared with the angular frequency with the non-discretized case:
 \begin{eqnarray}
-\sigma &=&\sqrt{gk+\gamma k^3}
+\sigma &=&\sqrt{gk+\gamma k^3},
 \end{eqnarray}
-, they are matched with each other in low wave numbers.
+they are matched with each other in low wave numbers.
 However, the discretized case is later than the non-discretized case in high wave numbers.
 
 \section{Conclusion}
 
-In this report I derived another stability condition of a numerical calculation about free surface flow.
-I noted that we must resolute transportation of the grid size capitally wave.
-This condition is not applied only in calculation of surface wave but also applied in calculation of maltiphase flow with level-set method or volume-of-fluid method or lattice Boltzmann method.
+In this report I derived another stability condition of a numerical
+calculation about free surface flow. I note that we must resolute
+transportation of the grid size capitally wave. This condition is not
+applied only in calculation of surface wave but also applied in
+calculation of maltiphase flow with level-set method or volume-of-fluid
+method or lattice Boltzmann method.
 
 Additionally, I comment that the mean flow is ignored here.
 In the case where the mean flow or fluctuation of large waves affect, small waves are transported on them.
