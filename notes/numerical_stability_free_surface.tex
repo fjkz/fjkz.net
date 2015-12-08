@@ -22,7 +22,7 @@
 \newcommand{\as}{\quad\mathrm{as}\quad}
 \newcommand{\on}{\quad\mathrm{on}\quad}
 
-\title{Stability of numerical analysis about free surface flow}
+\title{Stability of Numerical Analysis about Free Surface Flow}
 \author{Kazuho Fujii}
 \date{}
 
@@ -31,9 +31,9 @@
 \maketitle
 
 \section{Introduction}
-In numerical analysis with finite difference method the fact is known
+In numerical analysis with the finite difference method the fact is known
 that a time step can not be more than some values for calculation
-stability. For example, The condition of the Courant's number or the
+stability. For example, The condition of the Courant's number and the
 diffusion number are famous: respectively $u\Delta t/\Delta < 1$ in
 the advection equation (CFL condition) and $D\Delta t/\Delta^2 <
 0.5$ in the diffusion equation, where $\Delta$, $\Delta t$, $u$ and $D$
@@ -44,7 +44,7 @@ However, calculation about free surface can be unstable whenever it satisfies th
 
 In this report, I think about calculation stability with von Neumann's analysis method in the case of the small amplitude wave.
 
-\section{Analyzed equations}
+\section{Analyzed Equations}
 
 I think about Euler's equation and the equation of continuity:
 \begin{eqnarray}
@@ -78,8 +78,9 @@ Boundary conditions in the assumptions are as follows:
 \end{eqnarray}
 where $g$ means gravity acceleration and $\gamma$ means surface tension divided by density $\rho$. The boundary at $z=0$ means the water surface.
 
-\section{Stability conditions}
+\section{Stability Conditions}
 
+In this section, I derive stability conditions for calculating free surface flow.
 I think about the effects of horizontal and time discretization. For vertically the domain is not discretized here.
 For spacial difference, I analyzed three grid systems: the regular grid system and the collocate grid system and the staggered grid system;
 for time integration, I analyzed the Euler's explicit scheme. I write detail just about the case of using the regular grid system and the Euler's explicit scheme. Other cases can be analyzed in the same way.
