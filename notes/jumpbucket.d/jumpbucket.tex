@@ -18,7 +18,7 @@
 
 \setlength{\footskip}{30mm}
 
-\title{A Algorithm for Mapping Data to Storage Clusters}
+\title{An Algorithm for Mapping Data to Storage Clusters}
 \author{Kazuho Fujii}
 \date{}
 
@@ -28,10 +28,10 @@
 \section{Introduction}
 
 Mapping data to a storage cluster is a popular issue in distributed storage systems.
-In other word, the issue is to decide which node should have the data.
+In other words, the issue is to decide which node should have the data.
 Schemes of mapping data are required two characteristics.
 One is distributing objects uniformly among the storage cluster.
-This avoids bias of I/O requests to a specific node and the storage cluster gets efficient performance.
+This avoids the bias of I/O requests to a specific node and the storage cluster gets efficient performance.
 The other is suppressing data movement when the cluster is reorganized, e.g., adding a storage node by the reason that remaining capacity is small.
 
 A simple solution is to put a centralized server that governs the position of data objects.
@@ -39,9 +39,9 @@ However, in this approach access clients should inquire to the master server abo
 that should have the read or written data.
 The cost for this query is not negligible.
 
-For solving this problem following approach is effective:
+For solving this problem the following approach is effective:
 access clients and the storage cluster share a function that maps data objects to storage nodes.
-The master server is not necessary in this approach.
+The master server is not necessary for this approach.
 Access clients can know a priori the storage node requested I/O.
 
 Ceph\cite{ceph}, a popular distributed storage system, takes this approach.
@@ -61,10 +61,10 @@ In this paper, I introduce the jump bucket algorithm.
 
 Other algorithms for mapping object than CRUSH are proposed. Especially, I am inspired by jump consistent hash\cite{jump-consistent-hash}. It is shown in Figure \ref{code_jumpconsistenthash}.
 Its inputs are a 64 bit key and the number of items and its output is  an item number.
-Note that the value of key in while loop is a 64 bit pseudo-random variable by a linear congruential generator\cite{lecuyer}.
+Note that the value of key in the while loop is a 64 bit pseudo-random variable by a linear congruential generator\cite{lecuyer}.
 The advantage of jump consistent hash is its calculation performance.
 Its time complexity is $O(\log(N))$.
-The remarkable idea in the algorithm is that it calculates only items where the object destination is change.
+The remarkable idea in the algorithm is that it calculates only items where the object destination is changed.
 The detail is described in Section 3.
 
 \begin{figure}[tbp]
@@ -86,7 +86,7 @@ int32_t jump_consistent_hash(uint64_t key, int32_t num_items) {
 \label{code_jumpconsistenthash}
 \end{figure}
 
-The target situation of jump consistent hash is similar to list bucket. It is a inner algorithm of CRUSH.
+The target situation of jump consistent hash is similar to list bucket. It is an inner algorithm of CRUSH.
 Figure \ref{code_listbucket} shows an simple implementation of list bucket. Ceph use Jenkins' function\cite{jenkins} for the hash function.
 Jump consistent hash and list bucket are suitable for circumstances in which the number of items is monotonically increased and never shrinks.
 Jump consistent hash uses this restriction for getting good performance.
@@ -95,8 +95,8 @@ Thus, the idea in jump consistent hash is applicable for list bucket.
 Unlike jump consistent hash, list bucket can weight items.
 The third argument of Figure \ref{code_listbucket} is an array of sums of weights of items.
 The $i$-th member of the array is the sum of items from the first item to the $i$-th item.
-The probability where a item is chosen is in proportion to its weight.
-Weighting items is required to CRUSH algorithm.
+The probability where an item is chosen is in proportion to its weight.
+Weighting items are required to CRUSH algorithm.
 Hence, I extend jump consistent hash in order to enable it to weight items.
 
 \begin{figure}[tbp]
@@ -125,7 +125,7 @@ int32_t list_bucket(uint64_t key, int32_t num_items, uint32_t *sum_weights) {
 
 \section{Jump Bucket Algorithm}
 
-Jump bucket algorithm maps a object having a key to an weighted item in bucket.
+Jump bucket algorithm maps an object having a key to a weighted item in the bucket.
 Figure \ref{code_jumpbucket} shows a C implementation of jump bucket.
 The function is given a 64 bit key, the number of items and the array of the sums of item weights.
 The length of the array of the sums of item weights is the number of items, $N$.
@@ -172,7 +172,7 @@ int32_t jump_bucket(uint64_t key, int32_t num_items, uint32_t *sum_weights) {
 
 I summarize differences among jump bucket, jump consistent hash and list bucket in Table \ref{table_algorithms}.
 Unlike jump consistent hash, we can specify weights to items in jump bucket.
-The probability where a item is chosen is proportion to the weight of the item.
+The probability where an item is chosen is proportion to the weight of the item.
 That is, the probability equals $w_i / \sum_{n=0}^{N-1} w_n$, where $w_i$ is the weight of the item $i$.
 Note that the first item is $i=0$.
 The differences between jump bucket and list bucket are speed and reorganization efficiency.
@@ -193,14 +193,14 @@ The former is described in Section 4 and Section 5 and the later is described in
 \label{table_algorithms}
 \end{table}
 
-Jump bucket algorithm use the key idea of jump consistent hash.
+Jump bucket algorithm uses the key idea of jump consistent hash.
 It is to calculate only items where its destination is changed.
 
-Now I consider a case where add $(i+1)$-th item to a bucket already having $i$ items.
+Now I consider a case where we add $(i+1)$-th item to a bucket already having $i$ items.
 Suppose that the weight of $n$-th item is $w_n$.
 The probability where the destination for a key is changed by adding the new item is
 $w_{i+1} / \sum_{n=0}^{i+1} w_n$ if the bucket algorithm has the optimal reorganize performance.
-The new destination is the new added item.
+The new destination is the newly added item.
 The probability the destination is not changed is $\sum_{n=0}^i w_n / \sum_{n=0}^{i+1} w_n$.
 Therefore, when the $j$-th item ($j > i$) is added, the probability where the destination is not changed from the $i$-th addition is $\sum_{n=0}^i w_n / \sum_{n=0}^j w_n$.
 Suppose that $r$ is a pseudo-random variable depending on the key and $i$.
@@ -216,11 +216,11 @@ The outer while loop in Figure \ref{code_jumpbucket} conducts this procedure.
 
 I get a pseudo-random variable with a hash value by the item number and the key.
 Unlike jump consistent hash, I get pseudo-random value with the current item number.
-This is because I want get the same pseudo-random for the same item and the key for suppress unnecessary movement at reorganization.
+This is because I want to get the same pseudo-random for the same item and the key for suppressing unnecessary movement at reorganization.
 The kind of the hash function is optional. I use Jenkins' function\cite{jenkins} here.
 ``(double)(h + 1LL) / (double)(1LL $<<$ 31)" in Figure \ref{code_jumpbucket} is a pseudo-random value between 0 and 1.
 
-If ``w" in Figure \ref{code_jumpbucket} is larger than the sum of weights of all items, this means the destination change does not occur any more. The current destination is returned.
+If ``w" in Figure \ref{code_jumpbucket} is larger than the sum of weights of all items, this means the destination change does not occur anymore. The current destination is returned.
 
 In order to search the next item satisfying eq. \eqref{jump_dist}, I use the binary search algorithm. The inner while loop is an implement of it.
 
@@ -235,13 +235,13 @@ Therefore, the time complexity of jump bucket is $O((\log(N))^2)$. This is far s
 
 I compare the calculation performance about three algorithms: list bucket, jump bucket and jump consistent hash.
 The implementations are in Figure \ref{code_jumpconsistenthash}, Figure \ref{code_listbucket} and Figure \ref{code_jumpbucket}.
-The source code was compiled on a 64-bit platform using Gnu C Compiler with -O2 option and measured on an CPU which model name is Intel(R) Celeron(R) 2980U @ 1.60GHz.
+The source code was compiled on a 64-bit platform using Gnu C Compiler with -O2 option and measured on a CPU which model name is Intel(R) Celeron(R) 2980U @ 1.60GHz.
 
-I measured mean execution time of each function for various keys. For comparing with jump consistent hash the weights of items equals each other.
+I measured the mean execution time of each function for various keys. For comparing with jump consistent hash the weights of items equals each other.
 
-Figure \ref{performance} shows the result. The performance of each algorithm get far different as number of items is larger.
+Figure \ref{performance} shows the result. The performance of each algorithm get far different as a number of items is larger.
 The fastest algorithm is jump consistent hash, followed in order by jump bucket and list bucket.
-Comparing jump bucket and list bucket, jump bucket is far faster then list bucket.
+Comparing jump bucket and list bucket, jump bucket is far faster than list bucket.
 
 \begin{figure}[tbp]
   \begin{center}
@@ -253,20 +253,20 @@ Comparing jump bucket and list bucket, jump bucket is far faster then list bucke
 
 \section{Reorganization}
 
-I conducted experiments of objects movement under reorganization of buckets.
+I conducted experiments of objects movement under a reorganization of buckets.
 I tested five cases as following: adding a new item to the item list of the bucket, increasing weight of the last item in the item list, decreasing weight of the last item in the item list, increasing weight of the first item in the item list, decreasing weight of the first item in the item list. The first item of the item list represents the old items of the item list.
 
 I choose items under various keys from a bucket that has five items and each item weight is unity.
-I compare this object destination and new destination after the operation of the test case. In the cases of increasing item weight I change the weight to two, and in the cased of decreasing weight I change the weight to zero.
+I compare this object destination and new destination after the operation of the test case. In the cases of increasing item weight, I change the weight to two; and in the cased of decreasing weight, I change the weight to zero.
 
 Figure \ref{reorganize} shows the result of the experiment.
-Under the optimal behavior objcects do not move unnecessarily.
-In the cases of adding a new item and operations to the last item weight, both of jump bucket and list bucket have optimum characteristic.
-In the cases of changing the old item weight, two algorithm are different. Under list bucket objects movement is not optimal but moderate.
+Under the optimal behavior, objects do not move unnecessarily.
+In the cases of adding a new item and operations to the last item weight, both of jump bucket and list bucket have the optimum characteristic.
+In the cases of changing the old item weight, two algorithms are different. Under list bucket objects movement is not optimal but moderate.
 However, jump bucket gets a poor result.
 Catastrophic movement occurs when the old item weight is changed.
 This is because the changing of the first item's weight affects the next searched item.
-It is disadvantage of jump bucket algorithm.
+It is a disadvantage of jump bucket algorithm.
 We must verify its effects under the operation.
 
 \begin{figure}[tbp]
